@@ -1,8 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITServicePortfolioManager.Api", "ITServicePortfolioManager.Api\ITServicePortfolioManager.Api.csproj", "{A7FC125B-67A2-41E3-8E37-D3F85FE46170}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EA7C4E1E-6C1A-480A-9EE4-4E96A33FF337}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A7FC125B-67A2-41E3-8E37-D3F85FE46170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7FC125B-67A2-41E3-8E37-D3F85FE46170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7FC125B-67A2-41E3-8E37-D3F85FE46170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7FC125B-67A2-41E3-8E37-D3F85FE46170}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A7FC125B-67A2-41E3-8E37-D3F85FE46170} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 	EndGlobalSection
 EndGlobal

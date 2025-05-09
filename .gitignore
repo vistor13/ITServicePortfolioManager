@@ -1,0 +1,42 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.out
+*.o
+
+# Logs
+*.log
+*.trace
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*.~*
+
+# Build folders
+bin/
+obj/
+out/
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# User-specific files
+*.user
+*.suo
+
+# IDE-specific folders
+.vs/
+.idea/
+.vscode/
+
+# Package directories
+node_modules/
+packages/
