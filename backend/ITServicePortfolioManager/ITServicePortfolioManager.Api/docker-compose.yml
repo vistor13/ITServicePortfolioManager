@@ -1,0 +1,25 @@
+﻿services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    container_name: portfolio_manager_db
+  
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: PackageManagerDb
+      POSTGRES_USER: user
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    container_name: postgres_db
+
+volumes:
+  db_data:
