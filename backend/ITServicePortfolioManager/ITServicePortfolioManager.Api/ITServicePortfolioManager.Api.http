@@ -1,6 +1,0 @@
-@ITServicePortfolioManager.Api_HostAddress = http://localhost:5037
-
-GET {{ITServicePortfolioManager.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
