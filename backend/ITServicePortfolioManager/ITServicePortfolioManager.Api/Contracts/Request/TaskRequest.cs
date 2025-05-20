@@ -5,26 +5,27 @@ namespace ITServicePortfolioManager.Api.Contracts.Request;
 public sealed record TaskRequest(
     int CountProvider,
     int TotalHumanResource,
-    List<ServiceRequest> Services)
+    List<ServiceGroupRequest> Services)
 {
     public static TaskDto MapToDto(TaskRequest request)
     {
         var providers = new List<ProviderDto>();
 
-        var grouped = request.Services
-            .GroupBy(s => s.IndexGroup)
-            .OrderBy(g => g.Key)
-            .Select(g => g.Select(s => new ServiceDto(
-             s.Price, s.LabourIntensity,  s.IncomeForProvider,s.Discount
-            )).ToList())
-            .ToList();
-
         for (var i = 0; i < request.CountProvider; i++)
         {
-            var provider = new ProviderDto(grouped);
-            providers.Add(provider);
+            var groupedServiceDtos = request.Services
+                .Select(group => group.Services
+                    .Select(service => new ServiceDto(
+                        service.Price,
+                        service.LabourIntensity,
+                        service.IncomeForProviders[i],
+                        service.Discount))
+                    .ToList())
+                .ToList();
+
+            providers.Add(new ProviderDto(groupedServiceDtos));
         }
 
         return new TaskDto(request.TotalHumanResource, providers);
     }
-};
+}

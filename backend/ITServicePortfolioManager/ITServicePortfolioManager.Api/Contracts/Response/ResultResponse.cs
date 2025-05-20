@@ -2,12 +2,12 @@ using ITServicePortfolioManager.BLL.Models.Dto;
 
 namespace ITServicePortfolioManager.Api.Contracts.Response;
 
-public record ResultResponse(double CompanyIncome, IEnumerable<double> ProvidersIncome, int[][] Portfolio)
+public record ResultResponse(long Id , double CompanyIncome, IEnumerable<double> ProvidersIncome, int[][] Portfolio)
 {
-    public static ResultResponse ToResponse(ResultDto dto)
+    public static ResultResponse ToResponse(SolveResultDto dto)
     {
-        var rows = dto.Portfolio.GetLength(0);
-        var cols = dto.Portfolio.GetLength(1);
+        var rows = dto.Result.Portfolio.GetLength(0);
+        var cols = dto.Result.Portfolio.GetLength(1);
         var portfolio = new int[rows][];
 
         for (var i = 0; i < rows; i++)
@@ -15,10 +15,10 @@ public record ResultResponse(double CompanyIncome, IEnumerable<double> Providers
             portfolio[i] = new int[cols];
             for (var j = 0; j < cols; j++)
             {
-                portfolio[i][j] = dto.Portfolio[i, j];
+                portfolio[i][j] = dto.Result.Portfolio[i, j];
             }
         }
 
-        return new ResultResponse(dto.CompanyIncome, dto.ProvidersIncome, portfolio);
+        return new ResultResponse(dto.Id, dto.Result.CompanyIncome, dto.Result.ProvidersIncome, portfolio);
     }
 };

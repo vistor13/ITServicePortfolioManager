@@ -11,7 +11,7 @@ public sealed record TaskDto(
     public static TaskEntity ToEntity(TaskDto taskDto, string Algorithm)
     {
         var groupServices = taskDto.Providers
-            .SelectMany(provider =>
+            .SelectMany((provider, index) =>
                 provider.ServicesGroups.Select(group =>
                     new GroupServiceEntity
                     {
@@ -21,7 +21,8 @@ public sealed record TaskDto(
                             IncomeForProvider = service.IncomeForProvider,
                             LabourIntensity = service.LabourIntensity,
                             Price = service.Price
-                        }).ToList()
+                        }).ToList(),
+                        IndexProvider = index
                     })).ToList();
 
         return new TaskEntity

@@ -13,8 +13,6 @@ public class ServicePortfolioResultEntityTypeConfiguration: IEntityTypeConfigura
             .WithOne()
             .HasForeignKey<ServicePortfolioResultEntity>(p => p.TaskId);
 
-        builder.OwnsMany(x => x.ProvidersIncome, contactBuilder => { contactBuilder.ToJson(); });
-
         builder.OwnsMany(x => x.Portfolio, portfolioBuilder =>
         {
             portfolioBuilder.ToJson();

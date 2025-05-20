@@ -6,7 +6,7 @@ namespace ITServicePortfolioManager.BLL.Algorithm;
 public static class SolverGeneticAlgorithm
 {
         public static ResultDto SolveUsingGeneticAlgorithm
-            (List<ProviderDto> providers, 
+            (List<ProviderGroupStatsDto> providers, 
                 int totalHumanResources, 
                 int gaNoChangeCount = 5, 
                 int algoNoChangeCount = 10 ,
@@ -57,9 +57,9 @@ public static class SolverGeneticAlgorithm
 
             return initialRecordSolution;
         }
-      private static List<int[,]> CreatePopulation(List<ProviderDto> providers,int totalHumanResources ,int numberOfIndividuals)
+      private static List<int[,]> CreatePopulation(List<ProviderGroupStatsDto> providers,int totalHumanResources ,int numberOfIndividuals)
       {
-          var numberGroups = providers[0].ServicesGroups.Count;
+          var numberGroups = providers[0].GroupStats.Count;
           var numberProviders = providers.Count;
           var population = new List<int[,]> ();
           var tuples = CreateTuples(SolverGreedyAlgorithm.CalculateEta(providers));
@@ -75,7 +75,7 @@ public static class SolverGeneticAlgorithm
                   var calculateProb = CalculateTheProbabilityOfSelection(copyTuples);
                   var indexTuple = SelectRandomGroup(calculateProb);
                   var chooseTuple = copyTuples[indexTuple];
-                  var labourIntensity = SolverGreedyAlgorithm.TotalLabourIntensity(providers)[chooseTuple.Item2][chooseTuple.Item1];
+                  var labourIntensity = providers[chooseTuple.Item2].GroupStats[chooseTuple.Item1].TotalLabour;
                   if (totalHumanResources  - usedResources >= labourIntensity)
                   {
                       y[chooseTuple.Item1,chooseTuple.Item2] = 1;
@@ -143,11 +143,11 @@ public static class SolverGeneticAlgorithm
               .FirstOrDefault(g => randomValue >= Math.Min(g.gap.Start, g.gap.End) && randomValue < Math.Max(g.gap.Start, g.gap.End))!
               .index;
       }
-      private static void ExcludeIneligible(int availableHumanResource, List<ProviderDto> providers, List<Tuple<int, int, double>> tuples)
+      private static void ExcludeIneligible(int availableHumanResource, List<ProviderGroupStatsDto> providers, List<Tuple<int, int, double>> tuples)
       {
           for (var i = 0; i < tuples.Count; i++)
           {
-              var labourIntensity = SolverGreedyAlgorithm.TotalLabourIntensity(providers)[tuples[i].Item2][tuples[i].Item1];
+              var labourIntensity = providers[tuples[i].Item2].GroupStats[tuples[i].Item1].TotalLabour;
               if (availableHumanResource < labourIntensity)
               {
                   tuples.RemoveAt(i);
@@ -164,7 +164,7 @@ public static class SolverGeneticAlgorithm
 
          return existingHash == candidateHash;
       }
-      private static List<Tuple<int[,], int[,]>> ChooseParents(List<int[,]> population, List<ProviderDto> providers)
+      private static List<Tuple<int[,], int[,]>> ChooseParents(List<int[,]> population, List<ProviderGroupStatsDto> providers)
       {
           var parents = new List<Tuple<int[,], int[,]>>();
           var populationCopy = new List<int[,]>(population);
@@ -180,7 +180,7 @@ public static class SolverGeneticAlgorithm
 
           return parents;
       }
-      private static int[,] SelectParent(List<int[,]> population, List<ProviderDto> providers)
+      private static int[,] SelectParent(List<int[,]> population, List<ProviderGroupStatsDto> providers)
       {
           var probabilities = CalculateProbabilityIndividual(population, providers);CheckSum(probabilities);
          
@@ -200,7 +200,7 @@ public static class SolverGeneticAlgorithm
           var selectedParent = population[index];
           return selectedParent;
       }
-      private static List<double> CalculateProbabilityIndividual(List<int[,]> population,List<ProviderDto> providers)
+      private static List<double> CalculateProbabilityIndividual(List<int[,]> population,List<ProviderGroupStatsDto> providers)
       {
           var fitnes = population.Select(t => СalculateFitness(t, providers)).ToList();
           var sumFitness = fitnes.Sum();
@@ -208,7 +208,7 @@ public static class SolverGeneticAlgorithm
           var probabilities = fitnes.Select(f => f / sumFitness).ToList();
           return probabilities;
       } 
-      private static double СalculateFitness(int[,] individual, List<ProviderDto> providers)
+      private static double СalculateFitness(int[,] individual, List<ProviderGroupStatsDto> providers)
       {
           var incomeIt = SolverGreedyAlgorithm.CalculateIncomeCompany(providers, individual);
           var incomeProvider = SolverGreedyAlgorithm.CalculateIncomeProviders(providers, individual);
@@ -281,9 +281,9 @@ public static class SolverGeneticAlgorithm
 
           return mutationDescendants;
       }
-      private static List<int[,]> Repair(List<int[,]> population, List<ProviderDto> providers, int totalHumanResource)
+      private static List<int[,]> Repair(List<int[,]> population, List<ProviderGroupStatsDto> providers, int totalHumanResource)
       {
-          var totalLabourIntensity = SolverGreedyAlgorithm.TotalLabourIntensity(providers);
+          var totalLabourIntensity = providers.Select(provider => provider.GroupStats.Select(group => group.TotalLabour).ToList()).ToList();
           foreach (var t in population)
           {
               var totalIntensity = CalculateTotalIntensity(t, totalLabourIntensity);
@@ -319,7 +319,7 @@ public static class SolverGeneticAlgorithm
               totalIntensity -= totalLabourIntensity[j][i];
           }
       }
-      private static List<int[,]> UpdatePopulation(List<int[,]> population, List<ProviderDto> providers, List<int[,]> mutationPopulation)
+      private static List<int[,]> UpdatePopulation(List<int[,]> population, List<ProviderGroupStatsDto> providers, List<int[,]> mutationPopulation)
       {
           var sortedAdaptabilityStartPopulation = population
               .Select(p => СalculateFitness(p, providers))
@@ -358,7 +358,7 @@ public static class SolverGeneticAlgorithm
           var result= CalculateDifference(theBestRecord,newRecord);
           return result > 0;
       }
-      private static ResultDto DetermineBestSolution(List<int[,]> population, List<ProviderDto> providers)
+      private static ResultDto DetermineBestSolution(List<int[,]> population, List<ProviderGroupStatsDto> providers)
       {
           var evaluatedPopulation = population
               .Select(portfolio => (portfolio, 
@@ -391,6 +391,7 @@ public static class SolverGeneticAlgorithm
 
         return incomeDiff + providersDiff;
     }
+
     private static List<ResultDto> FilterBestSolutions(
         List<(int[,] Portfolio, double CompanyIncome, List<double> ProviderIncomes)> solutions)
     {
@@ -424,7 +425,4 @@ public static class SolverGeneticAlgorithm
         return filtered.Select(x =>
             new ResultDto(x.Item2, x.Item3, x.Item1)).ToList();
     }
-
-      
-
 }

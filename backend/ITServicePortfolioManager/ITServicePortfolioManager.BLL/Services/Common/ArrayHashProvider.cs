@@ -6,9 +6,9 @@ public static class ArrayHashProvider
 {
     public static byte[] ConvertArrayToByteArray(int[,] array)
     {
-        int rows = array.GetLength(0);
-        int cols = array.GetLength(1);
-        byte[] byteArray = new byte[rows * cols * sizeof(int)];
+        var rows = array.GetLength(0);
+        var cols = array.GetLength(1);
+        var byteArray = new byte[rows * cols * sizeof(int)];
 
         Buffer.BlockCopy(array, 0, byteArray, 0, byteArray.Length);
         return byteArray;

@@ -1,6 +1,6 @@
 namespace ITServicePortfolioManager.BLL.Models.Dto;
 
-public class DiscountedResultCollectionDto
+public class DiscountResultCollectionDto
 { 
     public List<ResultWithDiscountDto> Results { get; set; }
 }

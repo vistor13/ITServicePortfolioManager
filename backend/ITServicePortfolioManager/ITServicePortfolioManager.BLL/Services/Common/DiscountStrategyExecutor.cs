@@ -6,6 +6,7 @@ namespace ITServicePortfolioManager.BLL.Services.Common
     {
         private const int RowDimension = 0; 
         private const int ColomnDimension = 1;  
+        
         public static List<ProviderDto> AddDiscountToProviderWithMinimalIncome(List<ProviderDto> providers, double discount, IEnumerable<double> income)
         {
             var targetIncomeIndex = income

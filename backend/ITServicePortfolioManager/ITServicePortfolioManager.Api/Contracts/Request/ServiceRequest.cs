@@ -3,6 +3,5 @@ namespace ITServicePortfolioManager.Api.Contracts.Request;
 public sealed record ServiceRequest(
     int Price, 
     int LabourIntensity, 
-    double IncomeForProvider,
-    int IndexGroup,
+    List<double> IncomeForProviders,
     double Discount);

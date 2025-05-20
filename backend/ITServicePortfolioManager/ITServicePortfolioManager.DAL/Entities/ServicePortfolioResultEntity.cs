@@ -12,7 +12,8 @@ public class ServicePortfolioResultEntity : BaseEntity
     [Required]
     public double CompanyIncome { get; set; }
     [Required]
-    public List<ProviderIncomeEntity> ProvidersIncome { get; set; } = [];
+    public double[] ProvidersIncome { get; set; } = [];
+   
     [Required]
     public List<PortfolioCellEntity> Portfolio { get; set; } = [];
     
