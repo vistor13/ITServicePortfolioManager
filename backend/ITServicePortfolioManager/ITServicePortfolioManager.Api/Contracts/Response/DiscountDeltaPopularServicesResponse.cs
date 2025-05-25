@@ -1,18 +1,19 @@
 using ITServicePortfolioManager.BLL.Models.Dto;
 
 namespace ITServicePortfolioManager.Api.Contracts.Response;
-public sealed record CombinedDiscountDeltaResponse(
-    List<DiscountDeltaResponse> GeneralDeltas,
-    List<DiscountDeltaResponse> DetailedDeltas,
-    ResultWithDiscountResponse? BestResult
-)
+
+public sealed record DiscountDeltaPopularServicesResponse(List<DiscountDeltaResponse> GeneralDeltas,
+List<DiscountDeltaResponse> DetailedDeltas,
+ResultWithDiscountResponse? BestResult,
+List<int>? indexesServices)
 {
-    public static CombinedDiscountDeltaResponse MapToResponse(CombinedDiscountDeltaDto dto)
+    public static DiscountDeltaPopularServicesResponse MapToResponse(CombinedDiscountDeltaDto dto)
     {
-        return new CombinedDiscountDeltaResponse(
+        return new DiscountDeltaPopularServicesResponse(
             dto.GeneralDeltas.Select(MapOne).ToList(),
             dto.DetailedDeltas.Select(MapOne).ToList(),
-            dto.ResultDto is not null ? MapBest(dto.ResultDto) : null
+            dto.ResultDto is not null ? MapBest(dto.ResultDto) : null,
+            indexesServices: dto.Target?.GroupIndexes ?? new List<int>()
         );
     }
 

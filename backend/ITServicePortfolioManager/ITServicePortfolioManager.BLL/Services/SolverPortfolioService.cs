@@ -8,15 +8,15 @@ using ITServicePortfolioManager.DAL.Interfaces;
 namespace ITServicePortfolioManager.BLL.Services;
 
 
-public class SolverServicePortfolio(
+public class SolverPortfolioService(
     ITaskRepository taskRepository,
     IServicePortfolioResultRepository servicePortfolioResultRepository,
     IDiscountAnalysisService discountAnalysisService) : ISolverServicePortfolio
 {
     private const double Step001 = 0.01;
     private const double Step05 = 0.05;
-
-    public delegate List<ProviderDto> DiscountStrategyDelegate(
+    private const double Step10 = 0.10;
+    public delegate (List<ProviderDto> providers, DiscountTargetInfo Target) DiscountStrategyDelegate(
         List<ProviderDto> providers,
         double discount,
         object extraData);
@@ -53,27 +53,36 @@ public class SolverServicePortfolio(
         var best = generalDeltas.OrderByDescending(x => x.TotalDeltaPercent).First();
         if (best.TotalDeltaPercent <= 0)
         {
-            return new CombinedDiscountDeltaDto(generalDeltas, new List<DiscountDeltaDto>(), null);
+            return new CombinedDiscountDeltaDto(generalDeltas, new List<DiscountDeltaDto>(), null, null);
         }
 
         var bestDiscount = best.Discount;
 
-        var from = Math.Max(0, bestDiscount - Step05);
+        var from = Math.Max(0, bestDiscount - Step10);
         if (from == 0)
         {
             from = Step001;
         }
 
-        var to = Math.Min(0.99, bestDiscount + Step05);
+        var to = Math.Min(0.99, bestDiscount + Step10);
+        var detailedDeltas = new List<DiscountDeltaDto>();
 
-        var detailedDeltas = allDeltas
-            .Where(d => d.Discount >= from && d.Discount <= to)
-            .ToList();
+        if (from > 0 && allDeltas.Count > 0)
+        {
+            detailedDeltas.Add(allDeltas[0]);
+        }
+
+        detailedDeltas.AddRange(
+            allDeltas
+                .Where(d => d.Discount >= from && d.Discount <= to)
+                .ToList()
+        );
+
 
         var bestDetailedDelta = detailedDeltas.OrderByDescending(d => d.TotalDeltaPercent).First();
         var bestResultWithDiscount = allSimResults.Results[allDeltas.IndexOf(bestDetailedDelta)];
 
-        return new CombinedDiscountDeltaDto(generalDeltas, detailedDeltas, bestResultWithDiscount);
+        return new CombinedDiscountDeltaDto(generalDeltas, detailedDeltas, bestResultWithDiscount,allSimResults.Target);
     }
     
     public async Task<SolveResultDto> GetSolveAsync(long id)
@@ -90,7 +99,7 @@ public class SolverServicePortfolio(
             throw new ArgumentException($"Invalid algorithm type: {algorithmType}");
         }
 
-        var providers = ServiceGroupMetricsCalculator.AnalyzeProviders(providersDto);
+        var providers = ServiceGroupMetricsCalculator.AnalyzeGroups(providersDto);
 
         return resultAlgorithm switch
         {
@@ -127,8 +136,9 @@ public class SolverServicePortfolio(
         foreach (var discount in Enumerable.Range(startStepIndex, stepsCount).Select(i => i * discountStepValue))
         {
             var newProviders = discountStrategy(dto.Providers, discount, data);
-            var solution = SolveOptimizationTask(algorithmType, dto.TotalHumanResource, newProviders);
+            var solution = SolveOptimizationTask(algorithmType, dto.TotalHumanResource, newProviders.providers);
             results.Results.Add(new ResultWithDiscountDto(solution, Math.Round(discount, 2)));
+            results.Target = newProviders.Target;
         }
 
         return results;

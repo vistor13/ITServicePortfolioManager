@@ -25,6 +25,10 @@ namespace ITServicePortfolioManager.Api.Extensions
 							.AllowCredentials();
 					});
 			});
+			services.AddAuthentication(builder.Configuration);
+			services.AddAuthorization();
+			services.AddSwaggerGenServicePortfolio();
+			services.ConfigureAuth0(builder.Configuration);
 		}
 
 		public static void UseApplicationMiddlewares(this WebApplication app)
@@ -37,7 +41,10 @@ namespace ITServicePortfolioManager.Api.Extensions
 			}
 
 			app.UseRouting();
+			app.UseAuthentication();
+			app.UseAuthorization();
 			app.MapSolverEndpoint();
+			app.MapAuthEndpoint();
 			app.UseCors("AllowAngular");
 		}
 	}

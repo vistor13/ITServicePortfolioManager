@@ -1,3 +1,4 @@
+using ITServicePortfolioManager.BLL.Models;
 using ITServicePortfolioManager.BLL.Models.Dto;
 using ITServicePortfolioManager.BLL.Services.Common;
 
@@ -8,11 +9,42 @@ public static class SolverGeneticAlgorithm
         public static ResultDto SolveUsingGeneticAlgorithm
             (List<ProviderGroupStatsDto> providers, 
                 int totalHumanResources, 
-                int gaNoChangeCount = 5, 
-                int algoNoChangeCount = 10 ,
-                int numberOfIndividuals=10, 
+                int gaNoChangeCount = -1,
+                int algoNoChangeCount = -1,
+                int numberOfIndividuals = -1,
                 double p= 0.5)
         {
+            var P = providers.Count;
+            var G = providers[0].GroupStats.Count;
+            var size = GetProblemSize(P, G);
+
+            if (numberOfIndividuals <= 0 || gaNoChangeCount <= 0 || algoNoChangeCount <= 0)
+            {
+                switch (size)
+                {
+                    case ProblemSize.Small:
+                        numberOfIndividuals = 15;
+                        gaNoChangeCount = 5;
+                        algoNoChangeCount = 15;
+                        break;
+                    case ProblemSize.Medium:
+                        numberOfIndividuals = 25;
+                        gaNoChangeCount = 8;
+                        algoNoChangeCount = 25;
+                        break;
+                    case ProblemSize.Large:
+                        numberOfIndividuals = 40;
+                        gaNoChangeCount = 11;
+                        algoNoChangeCount = 30;
+                        break;
+                    case ProblemSize.VeryLarge:
+                        numberOfIndividuals = 60;
+                        gaNoChangeCount = 14;
+                        algoNoChangeCount = 35;
+                        break;
+                }
+            }
+
             var counterFirstCondition = 0;
             var counterSecondCondition = 0;
             var initialRecordSolution = new ResultDto(new double(), new List<double>(), new int[0,0]);
@@ -425,4 +457,16 @@ public static class SolverGeneticAlgorithm
         return filtered.Select(x =>
             new ResultDto(x.Item2, x.Item3, x.Item1)).ToList();
     }
+    private static ProblemSize GetProblemSize(int providersCount, int groupsCount)
+    {
+        if (providersCount <= 5 && groupsCount <= 10)
+            return ProblemSize.Small;
+        else if (providersCount <= 15 && groupsCount <= 40)
+            return ProblemSize.Medium;
+        else if (providersCount <= 30 && groupsCount <= 80)
+            return ProblemSize.Large;
+        else
+            return ProblemSize.VeryLarge;
+    }
+
 }

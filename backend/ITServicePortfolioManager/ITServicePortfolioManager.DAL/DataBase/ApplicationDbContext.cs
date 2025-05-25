@@ -8,4 +8,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<TaskEntity> Tasks { get; set; } = null!;
 
     public DbSet<ServicePortfolioResultEntity> ServicePortfolioResults { get; set; } = null!;
+
+    public DbSet<UserEntity> Users { get; set; } = null!;
 }

@@ -1,3 +1,4 @@
+using ITServicePortfolioManager.BLL.Models;
 using ITServicePortfolioManager.BLL.Models.Dto;
 
 namespace ITServicePortfolioManager.BLL.Services.Common
@@ -7,7 +8,7 @@ namespace ITServicePortfolioManager.BLL.Services.Common
         private const int RowDimension = 0; 
         private const int ColomnDimension = 1;  
         
-        public static List<ProviderDto> AddDiscountToProviderWithMinimalIncome(List<ProviderDto> providers, double discount, IEnumerable<double> income)
+        public static (List<ProviderDto> Providers, DiscountTargetInfo Target) AddDiscountToProviderWithMinimalIncome(List<ProviderDto> providers, double discount, IEnumerable<double> income)
         {
             var targetIncomeIndex = income
                 .Select((value, index) => new { Value = value, Index = index })
@@ -19,10 +20,10 @@ namespace ITServicePortfolioManager.BLL.Services.Common
                 .ToList()
                 .ForEach(service => service.Discount = discount);
 
-            return providers;
+            return (providers, new DiscountTargetInfo(targetIncomeIndex));
         }
 
-        public static List<ProviderDto> AddDiscountForPopularServices(List<ProviderDto> providers, double discount, int[,] portfolio)
+        public static (List<ProviderDto> Providers, DiscountTargetInfo Target) AddDiscountForPopularServices(List<ProviderDto> providers, double discount, int[,] portfolio)
         {
             var group = portfolio.GetLength(RowDimension);
             var provider = portfolio.GetLength(ColomnDimension);
@@ -46,7 +47,7 @@ namespace ITServicePortfolioManager.BLL.Services.Common
                 .ToList()
                 .ForEach(service => service.Discount = discount);
         
-            return providers;
+            return (providers,new DiscountTargetInfo(targetIncomeIndexes));
         }
     }
 }

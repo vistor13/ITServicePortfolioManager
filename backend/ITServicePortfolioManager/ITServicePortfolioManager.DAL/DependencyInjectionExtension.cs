@@ -10,5 +10,6 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IServicePortfolioResultRepository, ServicePortfolioResultRepository>();
         services.AddScoped<ITaskRepository, TaskRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
     }
 }

@@ -7,7 +7,7 @@ public sealed record TaskRequest(
     int TotalHumanResource,
     List<ServiceGroupRequest> Services)
 {
-    public static TaskDto MapToDto(TaskRequest request)
+    public static TaskDto MapToDto(TaskRequest request, long UserId)
     {
         var providers = new List<ProviderDto>();
 
@@ -26,6 +26,6 @@ public sealed record TaskRequest(
             providers.Add(new ProviderDto(groupedServiceDtos));
         }
 
-        return new TaskDto(request.TotalHumanResource, providers);
+        return new TaskDto(request.TotalHumanResource, providers,UserId);
     }
 }

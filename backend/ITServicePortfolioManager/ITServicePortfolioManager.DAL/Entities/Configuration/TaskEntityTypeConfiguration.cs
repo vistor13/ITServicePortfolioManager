@@ -12,7 +12,9 @@ public class TaskEntityTypeConfiguration: IEntityTypeConfiguration<TaskEntity>
 
         builder.Property(b => b.TotalHumanResource)
             .IsRequired();
-
+        builder.HasOne(t => t.User)
+            .WithMany(u => u.Tasks)
+            .HasForeignKey(t => t.UserId);
         builder.OwnsMany(x => x.Groups, portfolioBuilder =>
         {
             portfolioBuilder.ToJson();

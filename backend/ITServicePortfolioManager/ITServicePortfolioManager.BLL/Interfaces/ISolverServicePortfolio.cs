@@ -11,7 +11,7 @@ public interface ISolverServicePortfolio
         TaskDto dto,
         string algorithmType,
         long id,
-        SolverServicePortfolio.DiscountStrategyDelegate discountStrategy,
+        SolverPortfolioService.DiscountStrategyDelegate discountStrategy,
         string strategyData);
     
     Task<SolveResultDto> GetSolveAsync(long id);

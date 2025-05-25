@@ -18,4 +18,8 @@ public class TaskEntity : BaseEntity
     
     [Required]
     public int TotalHumanResource { get; set; }
+    
+    public long UserId { get; set; }
+    
+    public UserEntity User { get; set; }
 }

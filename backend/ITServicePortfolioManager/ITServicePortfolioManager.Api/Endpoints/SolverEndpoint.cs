@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using ITServicePortfolioManager.Api.Contracts.Request;
 using ITServicePortfolioManager.Api.Contracts.Response;
 using ITServicePortfolioManager.BLL.Interfaces;
@@ -11,10 +12,10 @@ public static class SolverEndpoint
     public static void MapSolverEndpoint(this IEndpointRouteBuilder app)
     {
         var endPoints = app.MapGroup("api/portfolio/").WithTags("Solver");
-        endPoints.MapPost("solve", ServicePortfolioSolver);
-        endPoints.MapGet("getSolve", GetSolve);
-        endPoints.MapPost("apply-discounts/popular", ApplyDiscountsToPopularServices);
-        endPoints.MapPost("apply-discounts/low-income", ApplyDiscountsToLowIncomeProvider);
+        endPoints.MapPost("solve", ServicePortfolioSolver).RequireAuthorization();
+        endPoints.MapGet("getSolve", GetSolve).RequireAuthorization();
+        endPoints.MapPost("apply-discounts/popular", ApplyDiscountsToPopularServices).RequireAuthorization();
+        endPoints.MapPost("apply-discounts/low-income", ApplyDiscountsToLowIncomeProvider).RequireAuthorization();
         
     }
 
@@ -22,9 +23,15 @@ public static class SolverEndpoint
     (
         [FromBody] TaskRequest request,
         [FromServices] ISolverServicePortfolio servicePortfolio,
-        [FromQuery] string typeAlgorithm)
+        [FromQuery] string typeAlgorithm,
+        HttpContext httpContext)
     {
-        var dto = TaskRequest.MapToDto(request);
+        var userId = httpContext.User.FindFirst("userId")?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+            return Results.Unauthorized();
+        
+        var dto = TaskRequest.MapToDto(request, Int64.Parse(userId));
         var result = await servicePortfolio.CreateServicePortfoliosAsync(dto, typeAlgorithm);
         return Results.Ok(ResultResponse.ToResponse(result));
     }
@@ -33,9 +40,14 @@ public static class SolverEndpoint
         [FromBody] TaskRequest request,
         [FromServices] ISolverServicePortfolio servicePortfolio,
         [FromQuery] string typeAlgorithm,
-        [FromQuery] long id)
+        [FromQuery] long id,
+        HttpContext httpContext)
     {
-        var dto = TaskRequest.MapToDto(request);
+        var userId = httpContext.User.FindFirst("userId")?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+            return Results.Unauthorized();
+        var dto = TaskRequest.MapToDto(request,Int64.Parse(userId));
     
         var result = await servicePortfolio.GetGeneralAndDetailedSimulation(
             dto,
@@ -45,16 +57,21 @@ public static class SolverEndpoint
                 DiscountStrategyExecutor.AddDiscountForPopularServices(providers, discount, (int[,])data),
             "popular"
         );
-        return Results.Ok(CombinedDiscountDeltaResponse.MapToResponse(result));
+        return Results.Ok(DiscountDeltaPopularServicesResponse.MapToResponse(result));
     }
     
     private static async Task<IResult> ApplyDiscountsToLowIncomeProvider(
         [FromBody] TaskRequest request,
         [FromServices] ISolverServicePortfolio servicePortfolio,
         [FromQuery] string typeAlgorithm,
-        [FromQuery] long id)
+        [FromQuery] long id,
+        HttpContext httpContext)
     {
-        var dto = TaskRequest.MapToDto(request);
+        var userId = httpContext.User.FindFirst("userId")?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+            return Results.Unauthorized();
+        var dto = TaskRequest.MapToDto(request,Int64.Parse(userId));
         var result = await servicePortfolio.GetGeneralAndDetailedSimulation(
             dto,
             typeAlgorithm,
@@ -63,7 +80,7 @@ public static class SolverEndpoint
                 DiscountStrategyExecutor.AddDiscountToProviderWithMinimalIncome(providers, discount, (IEnumerable<double>)data),
             "minimal"
         );
-        return Results.Ok(CombinedDiscountDeltaResponse.MapToResponse(result));
+        return Results.Ok(DiscountDeltaLowIncomeResponse.MapToResponse(result));
     }
 
     private static async Task<IResult> GetSolve(

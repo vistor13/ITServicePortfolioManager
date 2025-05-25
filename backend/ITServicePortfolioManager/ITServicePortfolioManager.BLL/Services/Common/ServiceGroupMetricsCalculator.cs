@@ -3,7 +3,7 @@ using ITServicePortfolioManager.BLL.Models.Dto;
 namespace ITServicePortfolioManager.BLL.Services.Common;
 public static class ServiceGroupMetricsCalculator
 {
-    public static List<ProviderGroupStatsDto> AnalyzeProviders(List<ProviderDto> providers)
+    public static List<ProviderGroupStatsDto> AnalyzeGroups(List<ProviderDto> providers)
     {
         return providers
             .Select((provider) =>
