@@ -1,0 +1,32 @@
+<div class="сnt">
+  <div class="container">
+    <form class="login-form" action=""
+          [formGroup]="form"
+          (ngSubmit)="onSubmit()">
+      <h1>З поверненням!</h1>
+      <div class="tt-control">
+        <label class="tt-label" >Логін</label>
+        <input
+          formControlName="userName"
+          class="tt-input"  type="text" placeholder="Вкажіть ваш логін">
+      </div>
+
+      <div class="tt-control">
+        <label class="tt-label" >Пароль</label>
+        <input
+          formControlName="password"
+          class="tt-input" type="password"  placeholder="Вкажіть ваш пароль">
+      </div>
+
+      <button class="btn-list" type="submit">Увійти</button>
+
+      <p class="auth-text">
+        Немає акаунту?
+        <a [routerLink]="['/signup']" class="enter-link">Sign Up</a>
+      </p>
+
+    </form>
+  </div>
+  <img src="/assets/imgs/main.png" alt="logo" class="project_logo">
+</div>
+

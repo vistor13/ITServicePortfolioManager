@@ -1,0 +1,136 @@
+
+<div class="container" [ngClass]="{'center-content': !result}">
+
+  <div class="without-result" *ngIf="!result && !isFormingStarted">
+    <p>Результат буде доступно після запуску формування.</p>
+  </div>
+
+  <div *ngIf="!result && isFormingStarted" class="loading" style="background: none;">
+    <p>Очікуйте, результатів формування пакетів...</p>
+    <img class ="img-spinner" src="/assets/imgs/loading-spinner.gif" alt="Завантаження..." />
+  </div>
+  <div *ngIf="result as r" class="result-card">
+  <div class="algorithm-buttons">
+    <button
+      [ngClass]="{ 'active': selectedAlgorithm === 'genetic' }"
+      (click)="getPortfolio(task!,'genetic')">
+      Генетичний алгоритм
+    </button>
+
+    <button
+      [ngClass]="{ 'active': selectedAlgorithm === 'greedy' }"
+      (click)="getPortfolio(task!,'greedy')">
+      Жадібний алгоритм
+    </button>
+  </div>
+    <h2>Результат формування</h2>
+
+    <app-income-package-display [data]="r" customClass="solution">></app-income-package-display>
+    <div class="full-width-line"></div>
+
+    <div *ngIf="!showChart" class="open-diagram">
+      <p class="description">
+        Задля перегляду впливу зміни знижок на ефективність найпопулярніших груп сервісів, провайдерів з найменшим доходом  — натисніть кнопку нижче для візуалізації результатів.
+      </p>
+
+      <button class="btn-list" (click)="showDiscountChart()" *ngIf="!showChart">
+        Визначення ефективних знижок
+      </button>
+    </div>
+
+    <div *ngIf="showChart && loading" class="loading" style="background: none;">
+      <p>Очікуйте, результататів визначення ефективних знижок...</p>
+      <img class ="img-spinner" src="/assets/imgs/loading-spinner.gif" alt="Завантаження..." />
+    </div>
+
+    <div *ngIf="showChart && !loading">
+      <h2>Визначення ефективних знижок</h2>
+      <div *ngIf="discountDeltasMostPopularServices?.generalDeltas?.length">
+        <app-discount-chart
+          [data]="discountDeltasMostPopularServices?.generalDeltas || [] "
+          [chartTitle]="getNameChart('mostPopularGeneral')">
+        </app-discount-chart>
+      </div>
+
+      <div *ngIf="discountDeltasMostPopularServices?.detailedDeltas?.length ">
+        <app-discount-chart
+          [data]="discountDeltasMostPopularServices?.detailedDeltas || [] "
+          [chartTitle]="getNameChart('mostPopularDetailed')">
+        </app-discount-chart>
+      </div>
+
+      <div *ngIf="discountDeltasLowIncomeProvider?.generalDeltas?.length ">
+        <app-discount-chart
+          [data]="discountDeltasLowIncomeProvider?.generalDeltas || []"
+          [chartTitle]="getNameChart('lowIncomeGeneral')">
+        </app-discount-chart>
+      </div>
+
+      <div *ngIf="discountDeltasLowIncomeProvider?.detailedDeltas?.length ">
+        <app-discount-chart
+          [data]="discountDeltasLowIncomeProvider?.detailedDeltas || []"
+          [chartTitle]="getNameChart('lowIncomeDetailed')">
+        </app-discount-chart>
+      </div>
+      <div class="full-width-line"></div>
+
+      <div class="effective-value">
+        <div class="strategy-block">
+          <h3 class="strategy-title">Найвживаніших сервісів</h3>
+
+          <div class="discount-summary" [ngClass]="{'center-content': !resultWithDiscountMorePopularDeltaResponse}">
+            <div *ngIf="resultWithDiscountMorePopularDeltaResponse as r; else noDiscount">
+              <div class="result-discount">
+                <div class="result">
+                  <h3>Ефективна знижка</h3>
+                  <p class="discount">{{ r.discount * 100 | number:'1.0-0' }} %</p>
+                </div>
+                <div class="result" *ngIf="discountDeltasMostPopularServices?.indexesServices?.length">
+                  <h3>Індекси груп сервісів</h3>
+                  <ul class="provider-list">
+                    <li  class="index" *ngFor="let index of discountDeltasMostPopularServices?.indexesServices">
+                      {{ index + 1 }}
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+              <app-income-package-display [data]="r" customClass="solution-discount"></app-income-package-display>
+            </div>
+          </div>
+          <ng-template #noDiscount>
+            <p class="no-discount-text">Ефективна знижка не виявлена.</p>
+          </ng-template>
+        </div>
+        <div class="strategy-block">
+          <h3 class="strategy-title">Низькодохідні провайдери</h3>
+          <div class="discount-summary" [ngClass]="{'center-content': !resultWithDiscountLowIncomeDeltaResponse}">
+            <div *ngIf="resultWithDiscountLowIncomeDeltaResponse as r; else noDiscount">
+              <div class="result-discount">
+                <div class="result">
+                  <h3>Ефективна знижка</h3>
+                  <p class="discount">{{ r.discount * 100 | number:'1.0-0' }} %</p>
+                </div>
+               <div class="result" >
+                 <h3>Індекс   провайдера</h3>
+                 <p class="discount">{{ (discountDeltasLowIncomeProvider?.indexProvider ?? -1) + 1 | number:'1.0-0' }}</p>
+               </div>
+              </div>
+              <div>
+                <app-income-package-display [data]="r" customClass="solution-discount"></app-income-package-display>
+              </div>
+            </div>
+
+            <ng-template #noDiscount>
+              <p class="no-discount-text">Ефективна знижка не виявлена.</p>
+            </ng-template>
+          </div>
+        </div>
+
+        </div>
+
+
+    </div>
+
+  </div>
+</div>

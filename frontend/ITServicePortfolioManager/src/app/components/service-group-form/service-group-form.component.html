@@ -1,0 +1,54 @@
+<div class="group-form" *ngIf="form" [formGroup]="form">
+  <h3>Новий сервіс</h3>
+
+  <div class="tt-control">
+    <label class="tt-label">Ціна:</label>
+    <input formControlName="price" class="tt-input" type="number" placeholder="Введіть ціну">
+    <div class="error" *ngIf="priceControl?.invalid && priceControl?.dirty">
+      Значення має бути більше 0
+    </div>
+  </div>
+
+  <div class="tt-control">
+    <label class="tt-label">Трудомісткість:</label>
+    <input formControlName="labourIntensity" class="tt-input" type="number" placeholder="Введіть трудомісткість">
+    <div class="error" *ngIf="labourIntensityControl.errors && labourIntensityControl?.dirty">
+      <ng-container *ngIf="labourIntensityControl.errors?.['min'] && labourIntensityControl.errors?.['notInteger']">
+        Значення має бути цілим числом більше 0
+      </ng-container>
+      <ng-container *ngIf="labourIntensityControl.errors?.['min'] && !labourIntensityControl.errors?.['notInteger']">
+        Значення має бути більше 0
+      </ng-container>
+      <ng-container *ngIf="!labourIntensityControl.errors?.['min'] && labourIntensityControl.errors?.['notInteger']">
+        Значення має бути цілим числом
+      </ng-container>
+    </div>
+  </div>
+  <label class="tt-label">Доходи для провайдерів:</label>
+  <div formArrayName="incomeForProviders" class="income-table-wrapper">
+    <table class="income-table">
+      <thead>
+      <tr>
+        <th>Провайдер</th>
+        <th>Дохід</th>
+        <th>Помилка</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let control of incomeControls; let i = index">
+        <td>Провайдер {{ i + 1 }}</td>
+        <td>
+          <input [formControlName]="i" class="tt-input-income" type="number" placeholder="Введіть дохід">
+        </td>
+        <td>
+          <div class="error" *ngIf="control?.invalid && control?.dirty">
+            Значення має бути більше 0
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="btn-list" (click)="submit()">Додати сервіс</button>
+</div>

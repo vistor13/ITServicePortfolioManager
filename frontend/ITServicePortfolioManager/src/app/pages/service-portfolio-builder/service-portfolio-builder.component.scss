@@ -1,0 +1,19 @@
+.page-container {
+  position: relative;
+  padding-top: 25px;
+}
+
+.back-button-position {
+  position: absolute;
+  left:100px;
+}
+
+.content-layout {
+  display: flex;
+  flex-direction: row;
+  gap:70px;
+  align-items: flex-start;
+  position: absolute;
+  left: 180px;
+  margin-top: 2rem;
+}

@@ -1,0 +1,53 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  width: 100%;
+  height: 100px;
+  position: relative;
+  margin-top: 25px;
+}
+.function{
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  right: 50px;
+  gap :15px;
+}
+.bt-about {
+  font-size: 16px;
+  border-radius: 15px;
+  width: 130px;
+  height: 50px;
+  background-color: transparent;
+  color: var(--text-color);
+  border: none;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0.5, 0, 1);
+  }
+}
+.bt-logout{
+  font-size: 16px;
+  border-radius: 15px;
+  width: 130px;
+  height: 50px;
+  background-color: transparent;
+  color: var(--text-color);
+  border: none;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0.5, 0, 1);
+  }
+}
+.project_logo{
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: absolute;
+  left: 90px;
+}
+
+

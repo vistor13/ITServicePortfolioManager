@@ -1,0 +1,52 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  height: 350px;
+  margin: 5rem auto;
+  padding: 2rem;
+}
+
+h1 {
+  font-size: 40px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+.btn-list {
+  padding: 10px 16px;
+
+}
+
+.auth-text {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 14px;
+}
+.project_logo{
+  width: 500px;
+  height: 550px;
+  margin-right: 100px;
+}
+.сnt{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 1rm;
+}
+.welcome{
+  font-size: 46px;
+  font-weight: bold;
+  margin: 0;
+}
+.form{
+  margin-left: 80px;
+}

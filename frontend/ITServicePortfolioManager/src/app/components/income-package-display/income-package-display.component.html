@@ -1,0 +1,44 @@
+<div [ngClass]="customClass">
+<div class="income-section">
+  <div class="card-income">
+    <h3>Дохід компанії</h3>
+    <p class="value income-company">{{ data.companyIncome | number:'1.3-3' }}</p>
+  </div>
+  <div class="card-income">
+    <h3>Сумарний дохід<br>провайдерів</h3>
+    <div class="summary-income" (click)="toggleDropdown()">
+      <span class="value">{{ getTotalProvidersIncome(data.providersIncome) | number:'1.3-3' }}</span>
+      <span class="info-icon">▾</span>
+    </div>
+
+    <ul class="provider-list dropdown" *ngIf="dropdownOpen">
+      <li *ngFor="let income of data.providersIncome; let i = index">
+        Провайдер {{ i + 1 }}: {{ income | number:'1.3-3' }}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Сформований пакет сервісів</h3>
+  <div class="table-wrapper">
+    <table class="matrix-table">
+      <thead>
+      <tr>
+        <th>Група/Провайдер</th>
+        <th *ngFor="let col of getProviderCount(data.portfolio)">Провайдер {{ col + 1 }}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let rowIndex of getGroupCount(data.portfolio)">
+        <td>Група {{ rowIndex + 1 }}</td>
+        <td *ngFor="let colIndex of getProviderCount(data.portfolio)"
+            [ngClass]="data.portfolio[rowIndex][colIndex] === 1 ? 'has-service' : 'no-service'">
+          {{ data.portfolio[rowIndex][colIndex] }}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>

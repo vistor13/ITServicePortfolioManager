@@ -1,0 +1,8 @@
+<div class="scroll-container" *ngIf="groups.length > 0">
+  <ul class="groups-list">
+    <li *ngFor="let group of groups; let i = index" class="group-item">
+      Група {{ i + 1 }} – {{ group.services.length }} сервіс(ів)
+      <button (click)="remove.emit(i)">🗑</button>
+    </li>
+  </ul>
+</div>

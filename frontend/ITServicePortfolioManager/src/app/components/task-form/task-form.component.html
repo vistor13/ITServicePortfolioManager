@@ -1,0 +1,100 @@
+<form class="input-form"
+      [formGroup]="form">
+  <h1>Вхідні дані для формування</h1>
+
+  <div class="tt-control">
+    <label class="tt-label">Кількість провайдерів</label>
+    <input formControlName="countProvider" class="tt-input" type="number" placeholder="Введіть кількість провайдерів">
+    <div class="error" *ngIf="countProviderControl.errors && countProviderControl.dirty">
+      <ng-container *ngIf="countProviderControl.errors['min'] && countProviderControl.errors['notInteger']">
+        Значення має бути цілим числом більше 0
+      </ng-container>
+      <ng-container *ngIf="countProviderControl.errors['min'] && !countProviderControl.errors['notInteger']">
+        Значення має бути більше 0
+      </ng-container>
+      <ng-container *ngIf="!countProviderControl.errors['min'] && countProviderControl.errors['notInteger']">
+        Значення має бути цілим числом
+      </ng-container>
+    </div>
+
+  </div>
+
+  <div class="tt-control">
+    <label class="tt-label">Загальний людський ресурс</label>
+    <input formControlName="totalHumanResource" class="tt-input" type="number" placeholder="Введіть загальний людський ресурс">
+    <div class="error" *ngIf="totalHumanResourceControl.errors && totalHumanResourceControl.dirty">
+      <ng-container *ngIf="totalHumanResourceControl.errors['min'] && totalHumanResourceControl.errors['notInteger']">
+        Значення має бути цілим числом більше 0
+      </ng-container>
+      <ng-container *ngIf="totalHumanResourceControl.errors['min'] && !totalHumanResourceControl.errors['notInteger']">
+        Значення має бути більше 0
+      </ng-container>
+      <ng-container *ngIf="!totalHumanResourceControl.errors['min'] && totalHumanResourceControl.errors['notInteger']">
+        Значення має бути цілим числом
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="groups">
+    <label class="tt-label">Групи сервісів:</label>
+    <div *ngIf="serviceGroups.length === 0" class="groups-empty">
+      Жодної групи ще не додано.
+    </div>
+  </div>
+
+  <div class="group-list">
+    <app-service-group-list [groups]="serviceGroups" (remove)="removeGroup($event)"></app-service-group-list>
+
+  </div>
+  <div class="tt-control-checkbox">
+    <label class="tt-label-discount">
+      <input type="checkbox" formControlName="hasDiscount"> Знижки для групи
+    </label>
+  </div>
+  <button
+    class="btn-list"
+    (click)="openAddGroup()"
+  >
+    Додати групу сервісів
+  </button>
+
+  <div class="error" *ngIf="submitted && countProviderControl.invalid">
+    Для початку введіть кількість провайдерів
+  </div>
+
+  <div class="modal-backdrop" *ngIf="isGroupFormOpen">
+    <div class="modal-content">
+      <div class="group-form-wrapper">
+        <p>Кількість сервісів у групі: {{ currentServices.length }}</p>
+        <app-service-group-form
+          [providerCount]="form.get('countProvider')?.value"
+          (addService)="addServiceToGroup($event)">
+        </app-service-group-form>
+
+      </div>
+      <form [formGroup]="discountform">
+        <div class="tt-control" *ngIf="form.get('hasDiscount')?.value">
+          <label class="tt-label">Знижка для групи :</label>
+          <input formControlName="discount" class="tt-input" type="number" placeholder="Введіть знижку для сервісу">
+          <div class="error" *ngIf="discountControl.invalid && discountControl.dirty">
+            Значення має бути більше 0, але менше 100
+          </div>
+        </div>
+      </form>
+
+      <div class="actions-btn">
+        <button class="btn-list-group"  (click)="saveGroup()" [disabled]="currentServices.length === 0">
+          Зберегти групу
+        </button>
+        <button class="btn-list-group"  (click)="closeAddGroup()">Скасувати</button>
+      </div>
+    </div>
+  </div>
+  <button class="btn-list form" (click)="createPortfolio(getTaskRequest(), 'genetic')">
+    Сформувати пакети сервісів
+  </button>
+
+  <div class="error" *ngIf="attemptedSubmit && !canCreatePortfolio()">
+    Ведіть всі дані: кількість провайдерів, загальний людський ресурс та додайте хоча б одну групу сервісів.
+  </div>
+</form>

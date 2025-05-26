@@ -1,0 +1,94 @@
+.input-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px;
+  width: 100%;
+  max-width: 435px;
+  height: 100%;
+  max-height: 550px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+.tt-label-discount{
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+}
+.groups{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+.tt-control-checkbox{
+  margin-bottom: 6px;
+}
+.group-list {
+  max-height: 80px;
+  overflow-y: auto;
+  margin-bottom: 5px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 3px;
+}
+h1 {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.btn-list {
+  margin-top: 6px;
+  padding: 10px 16px;
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 16px;
+  padding: 16px;
+  max-width: 450px;
+  width: 90%;
+  height: auto;
+  min-height: 100px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  z-index: 1001;
+}
+.groups-empty {
+  font-size: 14px;
+}
+
+.group-form-wrapper {
+  margin-bottom: 12px;
+  p {
+    margin-bottom: 0;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  app-service-group-form {
+    margin-top: 0;
+  }
+}
+
+.actions-btn {
+  display: flex;
+  justify-content: space-between;
+  margin-top:6px;
+}
+.btn-list-group{
+  margin-top: 6px;
+  width: 200px;
+  height:45px;
+}

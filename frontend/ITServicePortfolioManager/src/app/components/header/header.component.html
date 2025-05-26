@@ -1,0 +1,8 @@
+<img src="/assets/imgs/logo.png" alt="logo" class="project_logo">
+<div class="function">
+  <button [routerLink]="['/info']" class="bt-about">Про систему</button>
+  <button *ngIf="isAuthenticated()" (click)="logout()" class="bt-logout">Вихід</button>
+  <div class = "theme-button">
+    <app-theme> </app-theme>
+  </div>
+</div>

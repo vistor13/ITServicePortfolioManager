@@ -1,0 +1,42 @@
+<div class="container">
+  <form class="register-form" action=""
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+        autocomplete="off">
+    <h1>Створення облікового запису</h1>
+    <div class="tt-control">
+      <label class="tt-label">Логін</label>
+      <input
+        formControlName="userName"
+        class="tt-input"  type="text" placeholder="Вкажіть ваш логін">
+    </div>
+
+    <div class="tt-control">
+      <label class="tt-label">Пароль</label>
+      <input
+        formControlName="password"
+        class="tt-input"  type="password" placeholder="Вкажіть ваш пароль">
+    </div>
+
+    <div class="tt-control">
+      <label class="tt-label">Підтвердіть пароль</label>
+      <input
+        formControlName="confirmPassword"
+        class="tt-input"
+        type="password"
+        placeholder="Підтвердіть ваш пароль">
+    </div>
+
+    <div *ngIf="form.get('confirmPassword')?.hasError('passwordMismatch') && form.get('confirmPassword')?.touched" class="error">
+      Паролі не збігаються
+    </div>
+
+    <button class="btn-list" type="submit">Зареєструватися</button>
+
+    <p class="auth-text">
+       Маєте обліковий запис?
+      <a [routerLink]="['/login']" class="enter-link">Log In</a>
+    </p>
+
+  </form>
+</div>
