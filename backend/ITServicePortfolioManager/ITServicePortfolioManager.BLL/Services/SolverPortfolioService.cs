@@ -16,30 +16,24 @@ public class SolverPortfolioService(
     private const double Step001 = 0.01;
     private const double Step05 = 0.05;
     private const double Step10 = 0.10;
-    public delegate (List<ProviderDto> providers, DiscountTargetInfo Target) DiscountStrategyDelegate(
-        List<ProviderDto> providers,
-        double discount,
-        object extraData);
+    public delegate (List<ProviderDto> providers, DiscountTargetInfo Target) DiscountStrategyDelegate(List<ProviderDto> providers, double discount, object extraData);
 
-
-    public async Task<SolveResultDto> CreateServicePortfoliosAsync(TaskDto dto, string algorithmType)
+    public async Task<SolveResultDto> CreateServicePortfoliosAsync(TaskDto dto)
     {
-        var taskEntity = await taskRepository.Create(TaskDto.ToEntity(dto, algorithmType));
-        var solution = SolveOptimizationTask(algorithmType, dto.TotalHumanResource, dto.Providers);
+        var taskEntity = await taskRepository.Create(TaskDto.ToEntity(dto));
+        var solution = SolveOptimizationTask(dto.Algorithm, dto.TotalHumanResource, dto.Providers);
         var resultEntity = await servicePortfolioResultRepository.Create(ResultDto.ToEntity(solution, taskEntity.Id));
         return new SolveResultDto(solution, resultEntity.Id);
     }
 
     public async Task<CombinedDiscountDeltaDto> GetGeneralAndDetailedSimulation(
         TaskDto dto,
-        string algorithmType,
         long id,
         DiscountStrategyDelegate discountStrategy, 
         string strategyData)
     {
         var allSimResults = await SimulateDiscountsAsync(
             dto,
-            algorithmType,
             id,
             discountStrategy,
             strategyData
@@ -91,6 +85,18 @@ public class SolverPortfolioService(
         return new SolveResultDto(ResultDto.ToDto(resultEntity), resultEntity.Id);
     }
 
+    public async Task<SolveResultDto> GetSolveByTaskIdAsync(long taskId)
+    {
+        var resultEntity = await servicePortfolioResultRepository.GetByTaskIdAsync(taskId);
+        return new SolveResultDto(ResultDto.ToDto(resultEntity), resultEntity.Id);
+    }
+    
+    public async Task<List<TaskForResponseDto>> GetTasksByUserIdAsync(long UserId)
+    {
+        var tasks = await taskRepository.GetByUserIdAsync(UserId);
+        return tasks.Select(task => TaskForResponseDto.ToDto(task)).ToList();
+    }
+    
     private ResultDto SolveOptimizationTask(string algorithmType, int totalHumanResources,
         List<ProviderDto> providersDto)
     {
@@ -111,7 +117,6 @@ public class SolverPortfolioService(
 
     private async Task<DiscountResultCollectionDto> SimulateDiscountsAsync(
         TaskDto dto,
-        string algorithmType,
         long id,
         DiscountStrategyDelegate discountStrategy,
         string strategyData,
@@ -136,7 +141,7 @@ public class SolverPortfolioService(
         foreach (var discount in Enumerable.Range(startStepIndex, stepsCount).Select(i => i * discountStepValue))
         {
             var newProviders = discountStrategy(dto.Providers, discount, data);
-            var solution = SolveOptimizationTask(algorithmType, dto.TotalHumanResource, newProviders.providers);
+            var solution = SolveOptimizationTask(dto.Algorithm, dto.TotalHumanResource, newProviders.providers);
             results.Results.Add(new ResultWithDiscountDto(solution, Math.Round(discount, 2)));
             results.Target = newProviders.Target;
         }

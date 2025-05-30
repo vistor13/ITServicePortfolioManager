@@ -1,6 +1,6 @@
 using ITServicePortfolioManager.BLL.Models.Dto.Auth;
 
-namespace ITServicePortfolioManager.BLL.Services;
+namespace ITServicePortfolioManager.BLL.Interfaces;
 
 public interface IUserService
 {

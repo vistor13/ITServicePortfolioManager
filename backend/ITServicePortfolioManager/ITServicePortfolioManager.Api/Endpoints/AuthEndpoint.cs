@@ -1,6 +1,5 @@
 using ITServicePortfolioManager.Api.Contracts.Request.Auth;
-using ITServicePortfolioManager.BLL.Models.Dto.Auth;
-using ITServicePortfolioManager.BLL.Services;
+using ITServicePortfolioManager.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITServicePortfolioManager.Api.Endpoints;

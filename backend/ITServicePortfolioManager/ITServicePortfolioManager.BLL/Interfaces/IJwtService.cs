@@ -1,6 +1,6 @@
 using ITServicePortfolioManager.DAL.Entities;
 
-namespace ITServicePortfolioManager.BLL.Services;
+namespace ITServicePortfolioManager.BLL.Interfaces;
 
 public interface IJwtService
 {

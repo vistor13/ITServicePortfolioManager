@@ -1,6 +1,3 @@
 namespace ITServicePortfolioManager.Api.Contracts.Request;
 
-public class ServiceGroupRequest
-{
-    public List<ServiceRequest> Services { get; set; }
-}
+public sealed record ServiceGroupRequest(List<ServiceRequest> Services);

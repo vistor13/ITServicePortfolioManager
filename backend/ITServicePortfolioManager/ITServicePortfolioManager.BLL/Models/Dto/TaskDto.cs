@@ -6,10 +6,11 @@ namespace ITServicePortfolioManager.BLL.Models.Dto;
 public sealed record TaskDto(
     int TotalHumanResource,
     List<ProviderDto> Providers,
-    long UserId)
+    long UserId,
+    string Algorithm)
 {
   
-    public static TaskEntity ToEntity(TaskDto taskDto, string Algorithm)
+    public static TaskEntity ToEntity(TaskDto taskDto)
     {
         var groupServices = taskDto.Providers
             .SelectMany((provider, index) =>
@@ -31,9 +32,8 @@ public sealed record TaskDto(
             CountProvider = taskDto.Providers.Count,
             Groups = groupServices,
             TotalHumanResource = taskDto.TotalHumanResource,
-            NameAlgorithm = Algorithm,
+            NameAlgorithm = taskDto.Algorithm,
             UserId = taskDto.UserId
         };
     }
-
 };

@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using ITServicePortfolioManager.BLL.Interfaces;
 using ITServicePortfolioManager.BLL.Models.Dto.Auth;
 using ITServicePortfolioManager.DAL.Entities;
 using Microsoft.Extensions.Options;

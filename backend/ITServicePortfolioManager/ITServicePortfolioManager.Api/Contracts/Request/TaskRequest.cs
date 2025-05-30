@@ -2,12 +2,9 @@ using ITServicePortfolioManager.BLL.Models.Dto;
 
 namespace ITServicePortfolioManager.Api.Contracts.Request;
 
-public sealed record TaskRequest(
-    int CountProvider,
-    int TotalHumanResource,
-    List<ServiceGroupRequest> Services)
+public sealed record TaskRequest(int CountProvider, int TotalHumanResource, List<ServiceGroupRequest> Services)
 {
-    public static TaskDto MapToDto(TaskRequest request, long UserId)
+    public static TaskDto MapToDto(TaskRequest request, long UserId, string AlgrithmType)
     {
         var providers = new List<ProviderDto>();
 
@@ -26,6 +23,6 @@ public sealed record TaskRequest(
             providers.Add(new ProviderDto(groupedServiceDtos));
         }
 
-        return new TaskDto(request.TotalHumanResource, providers,UserId);
+        return new TaskDto(request.TotalHumanResource, providers,UserId,AlgrithmType);
     }
 }

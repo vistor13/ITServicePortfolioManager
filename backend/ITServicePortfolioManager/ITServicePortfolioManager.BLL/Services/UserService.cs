@@ -1,3 +1,4 @@
+using ITServicePortfolioManager.BLL.Interfaces;
 using ITServicePortfolioManager.BLL.Models.Dto.Auth;
 using ITServicePortfolioManager.BLL.Services.Common;
 using ITServicePortfolioManager.DAL.Entities;
@@ -29,7 +30,7 @@ public class UserService(IUserRepository userRepository, IJwtService jwtService)
         var entity = await userRepository.GetByUserName(loginDto.UserName);
         if (!PasswordHashProvider.Verify(loginDto.Password, entity.HashedPassword))
         {
-            throw new Exception("Password dont correct");
+            throw new Exception("Password don`t correct");
         };
        return jwtService.GenerateToken(entity);
     }

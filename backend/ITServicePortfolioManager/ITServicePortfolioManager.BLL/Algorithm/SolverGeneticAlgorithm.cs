@@ -10,84 +10,60 @@ public static class SolverGeneticAlgorithm
             (List<ProviderGroupStatsDto> providers, 
                 int totalHumanResources, 
                 int gaNoChangeCount = -1,
-                int algoNoChangeCount = -1,
                 int numberOfIndividuals = -1,
                 double p= 0.5)
         {
-            var P = providers.Count;
-            var G = providers[0].GroupStats.Count;
-            var size = GetProblemSize(P, G);
+            var size = GetProblemSize(providers.Count, providers[0].GroupStats.Count);
 
-            if (numberOfIndividuals <= 0 || gaNoChangeCount <= 0 || algoNoChangeCount <= 0)
+            if (numberOfIndividuals <= 0 || gaNoChangeCount <= 0 )
             {
                 switch (size)
                 {
                     case ProblemSize.Small:
                         numberOfIndividuals = 15;
-                        gaNoChangeCount = 5;
-                        algoNoChangeCount = 15;
+                        gaNoChangeCount = 10;
                         break;
                     case ProblemSize.Medium:
                         numberOfIndividuals = 25;
-                        gaNoChangeCount = 8;
-                        algoNoChangeCount = 25;
+                        gaNoChangeCount = 15;
                         break;
                     case ProblemSize.Large:
                         numberOfIndividuals = 40;
-                        gaNoChangeCount = 11;
-                        algoNoChangeCount = 30;
+                        gaNoChangeCount = 20;
                         break;
                     case ProblemSize.VeryLarge:
                         numberOfIndividuals = 60;
-                        gaNoChangeCount = 14;
-                        algoNoChangeCount = 35;
+                        gaNoChangeCount = 25;
                         break;
                 }
             }
 
             var counterFirstCondition = 0;
-            var counterSecondCondition = 0;
-            var initialRecordSolution = new ResultDto(new double(), new List<double>(), new int[0,0]);
-
-            while (counterSecondCondition <= algoNoChangeCount)
+            var population = CreatePopulation(providers, totalHumanResources , numberOfIndividuals);
+            var initialRecord = DetermineBestSolution(population, providers);
+            while (counterFirstCondition <= gaNoChangeCount)
             {
-                var population = CreatePopulation(providers, totalHumanResources , numberOfIndividuals);
-                var initialRecord = DetermineBestSolution(population, providers);
-                while (counterFirstCondition <= gaNoChangeCount)
-                {
-                    var parents = ChooseParents(population, providers);
-                    var offspring = Crossbreeding(parents);
-                    offspring = Repair(offspring, providers, totalHumanResources);
-                    offspring = Mutation(offspring, p);
-                    offspring = Repair(offspring, providers, totalHumanResources);
-                    population = UpdatePopulation(population, providers, offspring);
+                var parents = ChooseParents(population, providers);
+                var offspring = Crossbreeding(parents);
+                offspring = Repair(offspring, providers, totalHumanResources);
+                offspring = Mutation(offspring, p);
+                offspring = Repair(offspring, providers, totalHumanResources);
+                population = UpdatePopulation(population, providers, offspring);
 
-                    var newRecord = DetermineBestSolution(population, providers);
-                    if (IsTheBestNewSolution(initialRecord, newRecord))
-                    {
-                        initialRecord = newRecord;
-                        counterFirstCondition = 0;
-                    }
-                    else
-                    {
-                        counterFirstCondition++;
-                    }
-                    
-                }
-                if (IsTheBestNewSolution(initialRecordSolution, initialRecord))
+                var newRecord = DetermineBestSolution(population, providers);
+                if (IsTheBestNewSolution(initialRecord, newRecord))
                 {
-                    initialRecordSolution = initialRecord;
-                    counterSecondCondition = 0;
+                    initialRecord = newRecord;
+                    counterFirstCondition = 0;
                 }
                 else
                 {
-                    counterSecondCondition ++;
+                    counterFirstCondition++;
                 }
-
-                counterFirstCondition = 0;
+                
             }
 
-            return initialRecordSolution;
+            return initialRecord;
         }
       private static List<int[,]> CreatePopulation(List<ProviderGroupStatsDto> providers,int totalHumanResources ,int numberOfIndividuals)
       {
@@ -459,14 +435,13 @@ public static class SolverGeneticAlgorithm
     }
     private static ProblemSize GetProblemSize(int providersCount, int groupsCount)
     {
-        if (providersCount <= 5 && groupsCount <= 10)
-            return ProblemSize.Small;
-        else if (providersCount <= 15 && groupsCount <= 40)
-            return ProblemSize.Medium;
-        else if (providersCount <= 30 && groupsCount <= 80)
-            return ProblemSize.Large;
-        else
-            return ProblemSize.VeryLarge;
+        return providersCount switch
+        {
+            <= 5 when groupsCount <= 10 => ProblemSize.Small,
+            <= 15 when groupsCount <= 40 => ProblemSize.Medium,
+            <= 30 when groupsCount <= 80 => ProblemSize.Large,
+            _ => ProblemSize.VeryLarge
+        };
     }
 
 }
