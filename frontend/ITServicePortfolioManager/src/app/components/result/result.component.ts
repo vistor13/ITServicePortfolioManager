@@ -31,7 +31,7 @@ export class ResultComponent implements OnInit {
   result: ResultResponse | null = null;
   task: TaskRequest | null = null;
   solveService: SolverService= inject(SolverService);
-  selectedAlgorithm= 'genetic';
+  selectedAlgorithm: string | null = null;
   discountDeltasMostPopularServices: DiscountDeltaPopularServicesResponse| null = null;
   discountDeltasLowIncomeProvider: DiscountDeltaLowIncomeResponse| null = null;
   showChart = false;
@@ -56,11 +56,15 @@ export class ResultComponent implements OnInit {
     this.taskStateService.task$.subscribe(task => {
       this.task = task;
     });
+
+    this.taskStateService.selectedTypeAlgorithm$.subscribe(task => {
+        this.selectedAlgorithm = task;
+    });
   }
   reset(): void {
     this.result = null;
     this.task = null;
-    this.selectedAlgorithm='genetic';
+    this.selectedAlgorithm=null;
     this.discountDeltasMostPopularServices=null;
     this.resultWithDiscountLowIncomeDeltaResponse = null;
     this.showChart = false;
@@ -93,8 +97,8 @@ export class ResultComponent implements OnInit {
 
     if (this.task) {
       try {
-        await this.applyDiscountsToPopularServices(this.task, this.selectedAlgorithm);
-        await this.applyDiscountsToLowIncomeProvider(this.task, this.selectedAlgorithm);
+        await this.applyDiscountsToPopularServices(this.task, this.selectedAlgorithm!);
+        await this.applyDiscountsToLowIncomeProvider(this.task, this.selectedAlgorithm!);
       } catch (error) {
         console.error('Помилка при застосуванні знижок:', error);
       } finally {
@@ -131,7 +135,7 @@ export class ResultComponent implements OnInit {
         this.selectedAlgorithm = typeAlgorithm;
       });
     } else {
-      this.solveService.getSolverById(id).subscribe({
+      this.solveService.getSolutionById(id).subscribe({
         next: res => {
           this.result = res;
           this.selectedAlgorithm = typeAlgorithm;

@@ -1,0 +1,72 @@
+<h1 class="title">Список задач</h1>
+<div class="task-list-container">
+  <div *ngFor="let task of tasks; let i = index" class="task-row">
+    <div class="task-line">
+      <div class="task-label"><strong>Задача #{{ i + 1 }}</strong></div>
+      <div class="task-info">
+        К-сть провайдерів: <strong>{{ task.countProvider }}</strong> |
+        Людський ресурс: <strong>{{ task.totalHumanResource }}</strong> |
+        Груп: <strong>{{ task.services.length }}</strong>
+        <span class="arrow-icon" (click)="openModal(task)">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+       viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+</span>
+        <button (click)="getById(task.id)" class=" result">
+Результат
+        </button>
+
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-backdrop" *ngIf="selectedTask">
+    <div class="modal-content">
+      <h2>Групи сервісів</h2>
+
+      <div *ngFor="let group of selectedTask.services; let g = index">
+        <h3>Група {{ g + 1 }} ({{ group.serviceResponses?.length || 0 }} сервісів)</h3>
+
+        <div class="group-services-wrapper">
+          <div *ngFor="let service of group.serviceResponses; let i = index" class="service-card">
+            <div class="service-info">
+              <div class="service-header">Сервіс {{ i + 1 }}</div>
+              <div class="service-value">
+                <div class="service-attribute">
+                  <span>Трудомісткість:</span>
+                  <strong>{{ service.labourIntensity }}</strong>
+                </div>
+                <div class="service-attribute">
+                  <span>Ціна:</span>
+                  <strong>{{ service.price }}</strong>
+                </div>
+                <div class="service-attribute">
+                  <span>Знижка:</span>
+                  <strong>{{ service.discount }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="provider-prices-scroll">
+              <div class="provider-prices-title">Доходи для провайдерів:</div>
+              <div class="provider-prices-list">
+                <span *ngFor="let income of service.incomeForProviders; let j = index">
+                  Провайдер {{ j + 1 }}: <strong>{{ income }}</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="button-wrapper">
+        <button class="btn-list" (click)="closeModal()">Закрити</button>
+      </div>
+    </div>
+  </div>
+</div>

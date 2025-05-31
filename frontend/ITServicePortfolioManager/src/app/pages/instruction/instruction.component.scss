@@ -1,0 +1,84 @@
+:host {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-top: 10px;
+}
+
+.container-main {
+  width: 1000px;
+  height: 600px;
+  animation: fadeIn 1s ease-out forwards;
+  opacity: 0;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.back-button {
+  position: absolute;
+  left: 100px;
+  margin-bottom: 1.5rem;
+}
+
+
+h1.headline {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.6rem;
+  margin-top: 2rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  color: #c53030;
+}
+
+p, li {
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+ul, ol {
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+hr {
+  margin: 2rem 0;
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #cbd5e0, transparent);
+}
+
+.section {
+  margin-bottom: 2rem;
+  padding: 1rem 1.5rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+}
+
+.section.warning {
+  background-color: #fff5f5;
+  border: 1px solid #feb2b2;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

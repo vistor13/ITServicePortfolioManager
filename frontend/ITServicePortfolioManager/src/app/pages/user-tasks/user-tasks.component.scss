@@ -1,6 +1,5 @@
 .page-container {
   position: relative;
-  padding-top:5px;
 }
 
 .back-button-position {
@@ -11,9 +10,9 @@
 .content-layout {
   display: flex;
   flex-direction: row;
-  gap:35px;
+  gap:15px;
   align-items: flex-start;
   position: absolute;
-  left: 135px;
-  margin-top: 4rem;
+  left: 75px;
+  margin-top: 50px;
 }

@@ -1,27 +1,25 @@
 import {Component, ViewChild} from '@angular/core';
-import {ResultComponent} from '../../components/result/result.component';
-import {TaskFormComponent} from '../../components/task-form/task-form.component';
+import {ListTasksComponent} from '../../components/list-tasks/list-tasks.component';
 import {BackButtonComponent} from '../../components/back-button/back-button.component';
+import {ResultComponent} from '../../components/result/result.component';
 import {Router} from '@angular/router';
 import {TaskStateService} from '../../services/task-state.service';
 import {SolverService} from '../../services/solver.service';
 
 @Component({
-  selector: 'app-service-portfolio-builder',
-  standalone: true,
+  selector: 'app-user-tasks',
   imports: [
-    ResultComponent,
-    TaskFormComponent,
-    BackButtonComponent
+    ListTasksComponent,
+    BackButtonComponent,
+    ResultComponent
   ],
-  templateUrl: './service-portfolio-builder.component.html',
-  styleUrl: './service-portfolio-builder.component.scss'
+  templateUrl: './user-tasks.component.html',
+  styleUrl: './user-tasks.component.scss'
 })
-export class ServicePortfolioBuilderComponent {
+
+export class UserTasksComponent {
   @ViewChild('resultComponent') resultComponent?: ResultComponent;
-
   constructor(private router: Router,private taskStateService: TaskStateService,private  solverService: SolverService) {}
-
   onBackClicked() {
     if (this.resultComponent) {
       this.resultComponent.reset();
@@ -30,5 +28,4 @@ export class ServicePortfolioBuilderComponent {
     }
     this.router.navigate(['']);
   }
-
 }

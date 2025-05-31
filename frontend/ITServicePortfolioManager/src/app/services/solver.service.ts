@@ -5,6 +5,7 @@ import { TaskRequest } from '../interfaces/task-request.model';
 import { ResultResponse } from '../interfaces/result-response.model';
 import { Observable, tap } from 'rxjs';
 import {DiscountDeltaPopularServicesResponse, DiscountDeltaLowIncomeResponse} from '../interfaces/discount-delta-response';
+import {TaskResponse} from '../interfaces/task-response.model';
 
 
 @Injectable({
@@ -35,6 +36,11 @@ export class SolverService {
   logout() {
     this.cookieService.delete('resultGreedyId');
     this.cookieService.delete('resultGeneticId');
+    // опціонально: перевірка
+    console.log('Cookies deleted:',
+      this.cookieService.check('resultGreedyId'),
+      this.cookieService.check('resultGeneticId')
+    );
   }
 
   getSolveId(typeAlgorithm: string): number | 0 {
@@ -46,9 +52,15 @@ export class SolverService {
     return isNaN(id) ? 0 : id;
   }
 
-  getSolverById(idSolve: number): Observable<ResultResponse> {
-    return this.http.get<ResultResponse>(`${this.apiUrl}/getSolve`, {
+  getSolutionById(idSolve: number): Observable<ResultResponse> {
+    return this.http.get<ResultResponse>(`${this.apiUrl}/solutions`, {
       params: { idSolve: idSolve.toString() }
+    });
+  }
+
+  getSolutionByTaskId(taskId: number): Observable<ResultResponse> {
+    return this.http.get<ResultResponse>(`${this.apiUrl}/solutions/by-task`, {
+      params: { taskId: taskId.toString() }
     });
   }
   applyDiscountsToPopularServices(
@@ -83,5 +95,9 @@ export class SolverService {
         }
       }
     );
+  }
+
+  getSolvesByUserId(): Observable<TaskResponse[]> {
+    return this.http.get<TaskResponse[]>(`${this.apiUrl}/tasks`);
   }
 }

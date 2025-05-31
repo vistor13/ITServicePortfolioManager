@@ -37,6 +37,7 @@ export class TaskFormComponent implements OnInit {
   currentServices: ServiceRequest[] = [];
   isGroupFormOpen = false;
   attemptedSubmit = false;
+  submitted = false;
 
   result?: ResultResponse;
 
@@ -80,7 +81,7 @@ export class TaskFormComponent implements OnInit {
     return this.discountform.get('discount') as FormControl;
   }
 
-  submitted = false;
+
 
   openAddGroup() {
     this.submitted = true;
@@ -153,6 +154,7 @@ export class TaskFormComponent implements OnInit {
       this.result = res;
       this.taskStateService.setResult(res);
       this.taskStateService.setTask(request);
+      this.taskStateService.setSelectedTypeAlgorithm(typeAlgorithm);
     });
   }
    integerValidator(control: AbstractControl): ValidationErrors | null {

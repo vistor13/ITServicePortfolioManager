@@ -8,6 +8,7 @@ import {LoginComponent} from './pages/login/login.component';
 import {NoAuthGuard} from './guard/no-auth.guard';
 import {AuthGuard} from './guard/auth.guard';
 import {RegisterComponent} from './pages/register/register.component';
+import {UserTasksComponent} from './pages/user-tasks/user-tasks.component';
 
 export const routes: Routes =
   [
@@ -16,6 +17,7 @@ export const routes: Routes =
         {path : 'instruction', component : InstructionComponent,canActivate:[AuthGuard]},
         {path : 'info', component : InfoComponent},
         {path : 'builder', component : ServicePortfolioBuilderComponent,canActivate:[AuthGuard]},
+        {path : 'tasks', component : UserTasksComponent,canActivate:[AuthGuard]},
         {path: 'login',component: LoginComponent,canActivate:[NoAuthGuard]},
         {path: 'signup',component: RegisterComponent,canActivate:[NoAuthGuard]}
       ]
