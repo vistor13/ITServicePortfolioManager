@@ -44,6 +44,7 @@ namespace ITServicePortfolioManager.Api.Extensions
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.MapSolverEndpoint();
+			app.MapTaskEndpoint();
 			app.MapAuthEndpoint();
 			app.UseCors("AllowAngular");
 		}

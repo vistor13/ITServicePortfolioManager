@@ -15,7 +15,7 @@ public static class ServiceGroupMetricsCalculator
                         var totalLabour = group.Sum(s => s.LabourIntensity);
                         var totalIncome = group.Sum(s => s.IncomeForProvider);
                         var discount = group.Sum(s => s.Discount)/group.Count;
-                        return new ServiceGroupStats(totalPrice, totalLabour, totalIncome, discount);
+                        return new ServiceGroupStatsDto(totalPrice, totalLabour, totalIncome, discount);
                     }).ToList();
 
                 return new ProviderGroupStatsDto(stats);

@@ -1,3 +1,5 @@
+using ITServicePortfolioManager.BLL.Models.Dto.DiscountDelta;
+
 namespace ITServicePortfolioManager.BLL.Models.Dto;
 
 public sealed record CombinedDiscountDeltaDto(

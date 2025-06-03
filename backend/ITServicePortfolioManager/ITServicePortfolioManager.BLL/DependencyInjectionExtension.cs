@@ -15,6 +15,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IDiscountAnalysisService, DiscountAnalysisService>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ITaskService, TaskService>();
     }
     
     public static void ConfigureAuth0(this IServiceCollection services, IConfiguration configuration)

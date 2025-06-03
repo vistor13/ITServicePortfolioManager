@@ -49,7 +49,6 @@ public static class SolverGeneticAlgorithm
                 offspring = Mutation(offspring, p);
                 offspring = Repair(offspring, providers, totalHumanResources);
                 population = UpdatePopulation(population, providers, offspring);
-
                 var newRecord = DetermineBestSolution(population, providers);
                 if (IsTheBestNewSolution(initialRecord, newRecord))
                 {

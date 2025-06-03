@@ -19,6 +19,8 @@ public class TaskEntity : BaseEntity
     [Required]
     public int TotalHumanResource { get; set; }
     
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
     public long UserId { get; set; }
     
     public UserEntity User { get; set; }

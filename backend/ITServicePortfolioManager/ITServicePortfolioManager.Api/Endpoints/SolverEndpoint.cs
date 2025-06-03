@@ -2,6 +2,7 @@ using ITServicePortfolioManager.Api.Contracts.Request;
 using ITServicePortfolioManager.Api.Contracts.Response;
 using ITServicePortfolioManager.Api.Contracts.Response.Task;
 using ITServicePortfolioManager.BLL.Interfaces;
+using ITServicePortfolioManager.BLL.Models.Dto.Task;
 using ITServicePortfolioManager.BLL.Services.Common;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,13 +15,11 @@ public static class SolverEndpoint
         var endPoints = app.MapGroup("api/portfolio/").WithTags("Solver");
         endPoints.MapPost("solve", ServicePortfolioSolver).RequireAuthorization();
         endPoints.MapGet("solutions", GetSolveByIdAsync).RequireAuthorization();
-        endPoints.MapGet("tasks", GetTasksByUserId).RequireAuthorization();
         endPoints.MapGet("solutions/by-task", GetSolveByTaskIdAsync).RequireAuthorization();
         endPoints.MapPost("apply-discounts/popular", ApplyDiscountsToPopularServices).RequireAuthorization();
         endPoints.MapPost("apply-discounts/low-income", ApplyDiscountsToLowIncomeProvider).RequireAuthorization();
-        
-    }
 
+    }
     
     private static async Task<IResult> ServicePortfolioSolver
     (
@@ -60,7 +59,8 @@ public static class SolverEndpoint
         );
         return Results.Ok(DiscountDeltaPopularServicesResponse.MapToResponse(result));
     }
-    
+
+
     private static async Task<IResult> ApplyDiscountsToLowIncomeProvider(
         [FromBody] TaskRequest request,
         [FromServices] ISolverServicePortfolio servicePortfolio,
@@ -96,19 +96,5 @@ public static class SolverEndpoint
         var result = await servicePortfolio.GetSolveByTaskIdAsync(taskId);
         return Results.Ok(ResultResponse.ToResponse(result));
     }
-
-    private static async Task<IResult> GetTasksByUserId([FromServices] ISolverServicePortfolio servicePortfolio, HttpContext httpContext)
-    {
-        var userId = httpContext.User.FindFirst("userId")?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-            return Results.Unauthorized();
-        
-        var result = await servicePortfolio.GetTasksByUserIdAsync(Int64.Parse(userId));
-        var responses = result
-            .Select(TaskResponse.MapToResponse)
-            .ToList();
-
-        return Results.Ok(responses);
-    }
+    
 }

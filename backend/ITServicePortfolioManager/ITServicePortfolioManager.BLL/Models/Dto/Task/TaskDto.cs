@@ -1,7 +1,7 @@
 using ITServicePortfolioManager.DAL.Entities;
 using ITServicePortfolioManager.DAL.Entities.CommonEntity;
 
-namespace ITServicePortfolioManager.BLL.Models.Dto;
+namespace ITServicePortfolioManager.BLL.Models.Dto.Task;
 
 public sealed record TaskDto(
     int TotalHumanResource,

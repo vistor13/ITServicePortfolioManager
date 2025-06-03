@@ -1,4 +1,5 @@
 using ITServicePortfolioManager.BLL.Models.Dto;
+using ITServicePortfolioManager.BLL.Models.Dto.DiscountDelta;
 
 namespace ITServicePortfolioManager.Api.Contracts.Response;
 

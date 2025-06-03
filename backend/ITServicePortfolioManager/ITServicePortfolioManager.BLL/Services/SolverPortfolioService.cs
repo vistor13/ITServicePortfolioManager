@@ -2,6 +2,8 @@ using ITServicePortfolioManager.BLL.Algorithm;
 using ITServicePortfolioManager.BLL.Interfaces;
 using ITServicePortfolioManager.BLL.Models;
 using ITServicePortfolioManager.BLL.Models.Dto;
+using ITServicePortfolioManager.BLL.Models.Dto.DiscountDelta;
+using ITServicePortfolioManager.BLL.Models.Dto.Task;
 using ITServicePortfolioManager.BLL.Services.Common;
 using ITServicePortfolioManager.DAL.Interfaces;
 
@@ -85,16 +87,11 @@ public class SolverPortfolioService(
         return new SolveResultDto(ResultDto.ToDto(resultEntity), resultEntity.Id);
     }
 
+    
     public async Task<SolveResultDto> GetSolveByTaskIdAsync(long taskId)
     {
         var resultEntity = await servicePortfolioResultRepository.GetByTaskIdAsync(taskId);
         return new SolveResultDto(ResultDto.ToDto(resultEntity), resultEntity.Id);
-    }
-    
-    public async Task<List<TaskForResponseDto>> GetTasksByUserIdAsync(long UserId)
-    {
-        var tasks = await taskRepository.GetByUserIdAsync(UserId);
-        return tasks.Select(task => TaskForResponseDto.ToDto(task)).ToList();
     }
     
     private ResultDto SolveOptimizationTask(string algorithmType, int totalHumanResources,

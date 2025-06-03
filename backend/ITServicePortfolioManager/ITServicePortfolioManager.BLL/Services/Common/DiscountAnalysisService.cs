@@ -1,5 +1,6 @@
 using ITServicePortfolioManager.BLL.Interfaces;
 using ITServicePortfolioManager.BLL.Models.Dto;
+using ITServicePortfolioManager.BLL.Models.Dto.DiscountDelta;
 
 namespace ITServicePortfolioManager.BLL.Services.Common;
 

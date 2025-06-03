@@ -78,13 +78,13 @@ export class ResultComponent implements OnInit {
   getNameChart(chartType: 'mostPopularGeneral' | 'mostPopularDetailed' | 'lowIncomeGeneral' | 'lowIncomeDetailed'): string {
     switch (chartType) {
       case 'mostPopularGeneral':
-        return 'Знижки на найвживаніші групи сервісів';
+        return 'Знижки на найбільш вживаніші групи сервісів';
       case 'mostPopularDetailed':
-        return 'Детальний огляд на знижки найвживаніших груп сервісів';
+        return 'Детальний огляд знижок на найбільш вживаніші груп сервісів';
       case 'lowIncomeGeneral':
-        return 'Знижки для провайдерів з найнижчим доходом (загальний огляд)';
+        return 'Знижки для провайдера з найнижчим доходом (загальний огляд)';
       case 'lowIncomeDetailed':
-        return 'Детальний огляд знижок для провайдерів з найнижчим доходом';
+        return 'Детальний огляд знижок для провайдера з найнижчим доходом';
       default:
         return 'Графік знижок';
     }
