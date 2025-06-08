@@ -1,5 +1,6 @@
 using ITServicePortfolioManager.Api.Contracts.Request;
 using ITServicePortfolioManager.Api.Contracts.Response.Task;
+using ITServicePortfolioManager.Api.Extensions;
 using ITServicePortfolioManager.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,13 +12,22 @@ public static class TaskEndpoint
     {
         var endPoints = app.MapGroup("api/task/").WithTags("Tasks");
         endPoints.MapGet("tasks", GetTasksByUserId).RequireAuthorization();
-        endPoints.MapPost("filtered-tasks", GetFilteredTasks);
+        endPoints.MapPost("filtered-tasks", GetFilteredTasks).RequireAuthorization();
 
     }
-    private static async Task<IResult> GetFilteredTasks( [FromServices] ITaskService taskService,[FromBody] TaskFilteredRequest filter)
+    private static async Task<IResult> GetFilteredTasks( [FromServices] ITaskService taskService,[FromBody] TaskFilteredRequest filter, HttpContext httpContext)
     {
-        var tasks = await taskService.GetTasksAsync(TaskFilteredRequest.ToDto(filter));
-        var responses = tasks
+        var userId = httpContext.User.FindFirst("userId")?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+            return Results.Unauthorized();
+        
+        var tasksResult = await taskService.GetTasksAsync(TaskFilteredRequest.ToDto(filter,Int64.Parse(userId)));
+        
+        if (tasksResult.IsError)
+            return tasksResult.ToResult();
+        
+        var responses = tasksResult.Value
             .Select(TaskResponse.MapToResponse)
             .ToList();
 
@@ -31,7 +41,10 @@ public static class TaskEndpoint
             return Results.Unauthorized();
         
         var result = await taskService.GetTasksByUserIdAsync(Int64.Parse(userId));
-        var responses = result
+        if (result.IsError)
+            return result.ToResult();
+        
+        var responses = result.Value
             .Select(TaskResponse.MapToResponse)
             .ToList();
 

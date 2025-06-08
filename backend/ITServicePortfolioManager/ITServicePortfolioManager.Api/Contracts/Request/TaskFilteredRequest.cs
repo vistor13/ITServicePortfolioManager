@@ -8,8 +8,8 @@ public sealed record TaskFilteredRequest(
     bool? SortDescending,
     string? AlgorithmName)
 {
-    public static TaskFilterDto ToDto(TaskFilteredRequest request)
+    public static TaskFilterDto ToDto(TaskFilteredRequest request, long UserId)
     {
-        return new TaskFilterDto(request.FromDate, request.ToDate, request.SortDescending, request.AlgorithmName);
+        return new TaskFilterDto(UserId,request.FromDate, request.ToDate, request.SortDescending, request.AlgorithmName);
     }
 }

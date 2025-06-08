@@ -1,4 +1,5 @@
 using ITServicePortfolioManager.Api.Contracts.Request.Auth;
+using ITServicePortfolioManager.Api.Extensions;
 using ITServicePortfolioManager.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,14 +20,14 @@ public static class AuthEndpoint
         [FromServices] IUserService userService)
     {
         var result = await userService.Login(LoginRequest.MapToDto(request));
-        return Results.Ok(result);
+        return result.ToResult();
     }
     private static async Task<IResult> Register
     (
         [FromBody] RegistrationRequest request,
         [FromServices] IUserService userService)
     {
-        await userService.Reqister(RegistrationRequest.MapToDto(request));
-        return Results.Ok();
+        var result = await userService.Reqister(RegistrationRequest.MapToDto(request));
+        return result.ToResult();
     }
 }

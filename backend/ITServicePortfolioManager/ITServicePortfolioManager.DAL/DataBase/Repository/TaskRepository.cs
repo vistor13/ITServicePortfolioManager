@@ -8,11 +8,11 @@ public class TaskRepository(ApplicationDbContext context)
     : RepositoriesBase<TaskEntity>(context), ITaskRepository
 {
     public async Task<List<TaskEntity>> GetByUserIdAsync(long UserId) =>
-        (await context.Tasks.AsNoTracking().Where(task => task.UserId== UserId).ToListAsync())!;
-    public async Task<List<TaskEntity>> GetFilteredTasksAsync(DateTime? FromDate, DateTime? ToDate, bool? SortDescending, string? AlgorithmName)
+        (await context.Tasks.AsNoTracking().Where(task => task.UserId== UserId).ToListAsync());
+    public async Task<List<TaskEntity>> GetFilteredTasksAsync(long UserId,DateTime? FromDate, DateTime? ToDate, bool? SortDescending, string? AlgorithmName)
     {
-        var query = context.Tasks.AsQueryable();
-
+        var query = context.Tasks.AsQueryable().Where(t => t.UserId == UserId);
+        
         if (FromDate.HasValue)
             query = query.Where(t => t.CreatedAt >= FromDate.Value);
 
