@@ -1,5 +1,7 @@
 using ITServicePortfolioManager.BLL.Models;
 using ITServicePortfolioManager.BLL.Models.Dto;
+using ITServicePortfolioManager.BLL.Models.Dto.Provider;
+using ITServicePortfolioManager.BLL.Models.Dto.ResultFormating;
 using ITServicePortfolioManager.BLL.Services.Common;
 
 namespace ITServicePortfolioManager.BLL.Algorithm;

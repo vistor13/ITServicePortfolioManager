@@ -1,4 +1,4 @@
-namespace ITServicePortfolioManager.BLL.Models.Dto;
+namespace ITServicePortfolioManager.BLL.Models.Dto.Service;
 
 public class ServiceDto(int price, int labourIntensity, double incomeForProvider, double discount)
 {

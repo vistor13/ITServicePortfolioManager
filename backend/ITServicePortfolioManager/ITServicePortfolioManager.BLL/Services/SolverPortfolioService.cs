@@ -3,6 +3,8 @@ using ITServicePortfolioManager.BLL.Interfaces;
 using ITServicePortfolioManager.BLL.Models;
 using ITServicePortfolioManager.BLL.Models.Dto;
 using ITServicePortfolioManager.BLL.Models.Dto.DiscountDelta;
+using ITServicePortfolioManager.BLL.Models.Dto.ResultFormating;
+using ITServicePortfolioManager.BLL.Models.Dto.ResultFormating.WithDiscount;
 using ITServicePortfolioManager.BLL.Models.Dto.Task;
 using ITServicePortfolioManager.BLL.Services.Common;
 using ITServicePortfolioManager.DAL.Interfaces;
@@ -20,15 +22,15 @@ public class SolverPortfolioService(
     private const double Step10 = 0.10;
     public delegate (List<ProviderDto> providers, DiscountTargetInfo Target) DiscountStrategyDelegate(List<ProviderDto> providers, double discount, object extraData);
 
-    public async Task<SolveResultDto> CreateServicePortfoliosAsync(TaskDto dto)
+    public async Task<SolveResultDto> CreateServicePortfoliosAsync(TaskDto dto, long UserId)
     {
-        var taskEntity = await taskRepository.Create(TaskDto.ToEntity(dto));
+        var taskEntity = await taskRepository.Create(TaskDto.ToEntity(dto,UserId));
         var solution = SolveOptimizationTask(dto.Algorithm, dto.TotalHumanResource, dto.Providers);
         var resultEntity = await servicePortfolioResultRepository.Create(ResultDto.ToEntity(solution, taskEntity.Id));
         return new SolveResultDto(solution, resultEntity.Id);
     }
 
-    public async Task<CombinedDiscountDeltaDto> GetGeneralAndDetailedSimulation(
+    public async Task<DeltaSetDto> GetFullSimulation(
         TaskDto dto,
         long id,
         DiscountStrategyDelegate discountStrategy, 
@@ -40,7 +42,7 @@ public class SolverPortfolioService(
             discountStrategy,
             strategyData
         );
-        var allDeltas = discountAnalysisService.CalculateIncomeChanges(allSimResults).Deltas;
+        var allDeltas = discountAnalysisService.CalculateIncomeChanges(allSimResults);
         var generalDeltas = allDeltas
             .Where(d => Math.Abs(Math.Round(d.Discount / Step05) * Step05 - d.Discount) < 1e-6)
             .OrderBy(d => d.Discount)
@@ -49,7 +51,7 @@ public class SolverPortfolioService(
         var best = generalDeltas.OrderByDescending(x => x.TotalDeltaPercent).First();
         if (best.TotalDeltaPercent <= 0)
         {
-            return new CombinedDiscountDeltaDto(generalDeltas, new List<DiscountDeltaDto>(), null, null);
+            return new DeltaSetDto(generalDeltas, new List<DiscDeltaDto>(), null, null);
         }
 
         var bestDiscount = best.Discount;
@@ -61,7 +63,7 @@ public class SolverPortfolioService(
         }
 
         var to = Math.Min(0.99, bestDiscount + Step10);
-        var detailedDeltas = new List<DiscountDeltaDto>();
+        var detailedDeltas = new List<DiscDeltaDto>();
 
         if (from > 0 && allDeltas.Count > 0)
         {
@@ -78,7 +80,7 @@ public class SolverPortfolioService(
         var bestDetailedDelta = detailedDeltas.OrderByDescending(d => d.TotalDeltaPercent).First();
         var bestResultWithDiscount = allSimResults.Results[allDeltas.IndexOf(bestDetailedDelta)];
 
-        return new CombinedDiscountDeltaDto(generalDeltas, detailedDeltas, bestResultWithDiscount,allSimResults.Target);
+        return new DeltaSetDto(generalDeltas, detailedDeltas, bestResultWithDiscount,allSimResults.Target);
     }
     
     public async Task<SolveResultDto> GetSolveAsync(long id)
@@ -112,7 +114,7 @@ public class SolverPortfolioService(
         };
     }
 
-    private async Task<DiscountResultCollectionDto> SimulateDiscountsAsync(
+    private async Task<DiscResultsDto> SimulateDiscountsAsync(
         TaskDto dto,
         long id,
         DiscountStrategyDelegate discountStrategy,
@@ -130,16 +132,16 @@ public class SolverPortfolioService(
             _ => throw new ArgumentException("Unknown strategy data type", nameof(strategyData))
         };
 
-        var results = new DiscountResultCollectionDto
+        var results = new DiscResultsDto
         {
-            Results = [new ResultWithDiscountDto(result.Result, 0)]
+            Results = [new DiscountedResultDto(result.Result, 0)]
         };
 
         foreach (var discount in Enumerable.Range(startStepIndex, stepsCount).Select(i => i * discountStepValue))
         {
             var newProviders = discountStrategy(dto.Providers, discount, data);
             var solution = SolveOptimizationTask(dto.Algorithm, dto.TotalHumanResource, newProviders.providers);
-            results.Results.Add(new ResultWithDiscountDto(solution, Math.Round(discount, 2)));
+            results.Results.Add(new DiscountedResultDto(solution, Math.Round(discount, 2)));
             results.Target = newProviders.Target;
         }
 

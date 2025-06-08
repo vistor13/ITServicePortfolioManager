@@ -5,5 +5,5 @@ namespace ITServicePortfolioManager.BLL.Interfaces;
 
 public interface IDiscountAnalysisService
 {
-    DiscountDeltaCollectionDto CalculateIncomeChanges(DiscountResultCollectionDto discountResults);
+    List<DiscDeltaDto>  CalculateIncomeChanges(DiscResultsDto discountResults);
 }

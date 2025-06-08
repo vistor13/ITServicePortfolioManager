@@ -6,7 +6,7 @@ namespace ITServicePortfolioManager.BLL.Services.Common;
 
 public class DiscountAnalysisService : IDiscountAnalysisService
 {
-    public DiscountDeltaCollectionDto CalculateIncomeChanges(DiscountResultCollectionDto discountResults)
+    public List<DiscDeltaDto> CalculateIncomeChanges(DiscResultsDto discountResults)
     {
         var baseResult = discountResults.Results[0].ResultDto;
 
@@ -21,16 +21,16 @@ public class DiscountAnalysisService : IDiscountAnalysisService
                 let companyIncomeDeltaPercent = (currentCompanyIncome - baseCompanyIncome) / baseCompanyIncome * 100
                 let providersIncomeDeltaPercent = (currentProvidersIncomeSum - baseProvidersIncomeSum) / baseProvidersIncomeSum * 100 
                 let totalDeltaPercent = companyIncomeDeltaPercent + providersIncomeDeltaPercent 
-                select new DiscountDeltaDto(
+                select new DiscDeltaDto(
                     Discount: item.Discount,
                     CompanyIncomeDeltaPercent: companyIncomeDeltaPercent, 
                     ProvidersIncomeDeltaPercent: providersIncomeDeltaPercent,
                     TotalDeltaPercent: totalDeltaPercent)).ToList();
 
-        return new DiscountDeltaCollectionDto(deltas);
+        return deltas;
     }
 
-    private List<List<double>> CalculateProviderIncomeChangesByIndex(DiscountResultCollectionDto discountResults)
+    private List<List<double>> CalculateProviderIncomeChangesByIndex(DiscResultsDto discountResults)
     {
         var providerIncomeChangesByIndex = new List<List<double>>();
 

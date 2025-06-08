@@ -1,7 +1,7 @@
 using ITServicePortfolioManager.DAL.Entities;
 using ITServicePortfolioManager.DAL.Entities.CommonEntity;
 
-namespace ITServicePortfolioManager.BLL.Models.Dto;
+namespace ITServicePortfolioManager.BLL.Models.Dto.ResultFormating;
 
 public sealed record ResultDto(double CompanyIncome, List<double> ProvidersIncome, int[,] Portfolio)
 {

@@ -33,8 +33,8 @@ public static class SolverEndpoint
         if (string.IsNullOrEmpty(userId))
             return Results.Unauthorized();
         
-        var dto = TaskRequest.MapToDto(request, Int64.Parse(userId),typeAlgorithm);
-        var result = await servicePortfolio.CreateServicePortfoliosAsync(dto);
+        var dto = TaskRequest.MapToDto(request,typeAlgorithm);
+        var result = await servicePortfolio.CreateServicePortfoliosAsync(dto,Int64.Parse(userId));
         return Results.Ok(ResultResponse.ToResponse(result));
     }
     
@@ -50,14 +50,14 @@ public static class SolverEndpoint
         if (string.IsNullOrEmpty(userId))
             return Results.Unauthorized();
         
-        var dto = TaskRequest.MapToDto(request,Int64.Parse(userId),typeAlgorithm);
+        var dto = TaskRequest.MapToDto(request,typeAlgorithm);
     
-        var result = await servicePortfolio.GetGeneralAndDetailedSimulation(dto, id,
+        var result = await servicePortfolio.GetFullSimulation(dto, id,
             (providers, discount, data) =>
                 DiscountStrategyExecutor.AddDiscountForPopularServices(providers, discount, (int[,])data),
             "popular"
         );
-        return Results.Ok(DiscountDeltaPopularServicesResponse.MapToResponse(result));
+        return Results.Ok(PopularServicesDeltaResponse.MapToResponse(result));
     }
 
 
@@ -73,13 +73,13 @@ public static class SolverEndpoint
         if (string.IsNullOrEmpty(userId))
             return Results.Unauthorized();
         
-        var dto = TaskRequest.MapToDto(request,Int64.Parse(userId),typeAlgorithm);
-        var result = await servicePortfolio.GetGeneralAndDetailedSimulation(dto, id,
+        var dto = TaskRequest.MapToDto(request,typeAlgorithm);
+        var result = await servicePortfolio.GetFullSimulation(dto, id,
             (providers, discount, data) =>
                 DiscountStrategyExecutor.AddDiscountToProviderWithMinimalIncome(providers, discount, (IEnumerable<double>)data),
             "minimal"
         );
-        return Results.Ok(DiscountDeltaLowIncomeResponse.MapToResponse(result));
+        return Results.Ok(LowIncomeDeltaResponse.MapToResponse(result));
     }
 
     private static async Task<IResult> GetSolveByIdAsync(

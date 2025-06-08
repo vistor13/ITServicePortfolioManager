@@ -1,6 +1,6 @@
 namespace ITServicePortfolioManager.Api.Contracts.Response;
 
-public sealed record DiscountDeltaResponse(
+public sealed record DiscDeltaResponse(
     double Discount,
     double CompanyIncomeDeltaPercent,
     double ProvidersIncomeDeltaPercent,

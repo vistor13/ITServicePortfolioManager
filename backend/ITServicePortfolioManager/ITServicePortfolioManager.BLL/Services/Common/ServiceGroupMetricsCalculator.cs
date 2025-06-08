@@ -1,4 +1,5 @@
 using ITServicePortfolioManager.BLL.Models.Dto;
+using ITServicePortfolioManager.BLL.Models.Dto.Provider;
 
 namespace ITServicePortfolioManager.BLL.Services.Common;
 public static class ServiceGroupMetricsCalculator

@@ -1,24 +1,25 @@
 using ITServicePortfolioManager.BLL.Models.Dto;
 using ITServicePortfolioManager.BLL.Models.Dto.DiscountDelta;
+using ITServicePortfolioManager.BLL.Models.Dto.ResultFormating.WithDiscount;
 
 namespace ITServicePortfolioManager.Api.Contracts.Response;
 
-public sealed record DiscountDeltaPopularServicesResponse(List<DiscountDeltaResponse> GeneralDeltas,
-List<DiscountDeltaResponse> DetailedDeltas,
-ResultWithDiscountResponse? BestResult,
+public sealed record PopularServicesDeltaResponse(List<DiscDeltaResponse> GeneralDeltas,
+List<DiscDeltaResponse> DetailedDeltas,
+DiscountedResultResponse? BestResult,
 List<int>? indexesServices)
 {
-    public static DiscountDeltaPopularServicesResponse MapToResponse(CombinedDiscountDeltaDto dto)
+    public static PopularServicesDeltaResponse MapToResponse(DeltaSetDto setDto)
     {
-        return new DiscountDeltaPopularServicesResponse(
-            dto.GeneralDeltas.Select(MapOne).ToList(),
-            dto.DetailedDeltas.Select(MapOne).ToList(),
-            dto.ResultDto is not null ? MapBest(dto.ResultDto) : null,
-            indexesServices: dto.Target?.GroupIndexes ?? new List<int>()
+        return new PopularServicesDeltaResponse(
+            setDto.GeneralDeltas.Select(MapOne).ToList(),
+            setDto.DetailedDeltas.Select(MapOne).ToList(),
+            setDto.DiscountedResultDto is not null ? MapBest(setDto.DiscountedResultDto) : null,
+            indexesServices: setDto.Target?.GroupIndexes ?? new List<int>()
         );
     }
 
-    private static DiscountDeltaResponse MapOne(DiscountDeltaDto d) =>
+    private static DiscDeltaResponse MapOne(DiscDeltaDto d) =>
         new(
             d.Discount,
             d.CompanyIncomeDeltaPercent,
@@ -26,7 +27,7 @@ List<int>? indexesServices)
             d.TotalDeltaPercent
         );
 
-    private static ResultWithDiscountResponse MapBest(ResultWithDiscountDto dto) =>
+    private static DiscountedResultResponse MapBest(BLL.Models.Dto.ResultFormating.WithDiscount.DiscountedResultDto dto) =>
         new(
             dto.Discount,
             dto.ResultDto.CompanyIncome,
