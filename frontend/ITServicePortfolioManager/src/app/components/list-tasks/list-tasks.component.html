@@ -1,12 +1,13 @@
-<h1 class="title">Список задач</h1>
+
 <div class="task-list-container">
   <div *ngFor="let task of tasks; let i = index" class="task-row">
     <div class="task-line">
       <div class="task-label"><strong>Задача #{{ i + 1 }}</strong></div>
       <div class="task-info">
-        К-сть провайдерів: <strong>{{ task.countProvider }}</strong> |
-        Людський ресурс: <strong>{{ task.totalHumanResource }}</strong> |
-        Груп: <strong>{{ task.services.length }}</strong>
+        К-сть пров : <strong>{{ task.countProvider }}</strong> |
+        Люд. ресурс : <strong>{{ task.totalHumanResource }}</strong> |
+        Груп : <strong>{{ task.services.length }}</strong> |
+        Алг. : <strong>{{ task.algorithm }}</strong> |
         <span class="arrow-icon" (click)="openModal(task)">
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
        viewBox="0 0 24 24" stroke="currentColor">
@@ -16,9 +17,7 @@
                   d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
 </span>
-        <button (click)="getById(task.id)" class=" result">
-Результат
-        </button>
+        <button (click)="getById(task.id)" class=" result">Результат</button>
 
 
       </div>

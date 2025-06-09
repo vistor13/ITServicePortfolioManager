@@ -5,7 +5,6 @@ import { TaskRequest } from '../interfaces/task-request.model';
 import { ResultResponse } from '../interfaces/result-response.model';
 import { Observable, tap } from 'rxjs';
 import {DiscountDeltaPopularServicesResponse, DiscountDeltaLowIncomeResponse} from '../interfaces/discount-delta-response';
-import {TaskResponse} from '../interfaces/task-response.model';
 
 
 @Injectable({
@@ -36,11 +35,6 @@ export class SolverService {
   logout() {
     this.cookieService.delete('resultGreedyId');
     this.cookieService.delete('resultGeneticId');
-    // опціонально: перевірка
-    console.log('Cookies deleted:',
-      this.cookieService.check('resultGreedyId'),
-      this.cookieService.check('resultGeneticId')
-    );
   }
 
   getSolveId(typeAlgorithm: string): number | 0 {
@@ -95,9 +89,5 @@ export class SolverService {
         }
       }
     );
-  }
-
-  getSolvesByUserId(): Observable<TaskResponse[]> {
-    return this.http.get<TaskResponse[]>(`${this.apiUrl}/tasks`);
   }
 }

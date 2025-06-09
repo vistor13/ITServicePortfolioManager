@@ -18,33 +18,39 @@ import {NgIf} from '@angular/common';
 export class RegisterComponent {
   router = inject(Router);
   authService = inject(AuthService);
+  errorMessage: string | null = null;
 
-  form: FormGroup = new FormGroup({
-    userName: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
-    password: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
-    confirmPassword: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
-  }, {
-    validators: [this.passwordMatchValidator]
-  });
+  submitted = false;
+
+  form: FormGroup = new FormGroup(
+  {
+    userName: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required]),
+    confirmPassword: new FormControl('', [Validators.required]),
+  },{ validators: this.passwordMatchValidator }
+  );
 
   passwordMatchValidator(control: AbstractControl) {
-    const password = control.get('password')?.value;
-    const confirmPassword = control.get('confirmPassword')?.value;
-
-    if (password !== confirmPassword) {
-      control.get('confirmPassword')?.setErrors({ passwordMismatch: true });
-    } else {
-      control.get('confirmPassword')?.setErrors(null);
-    }
-
-    return null;
+  const password = control.get('password')?.value;
+  const confirmPassword = control.get('confirmPassword')?.value;
+  return password && confirmPassword && password !== confirmPassword
+    ? { passwordMismatch: true }
+    : null;
   }
+
+
 
   onSubmit() {
-    if (this.form.valid) {
-      this.authService.register(this.form.value).subscribe(() => {
-        this.router.navigate(['/login']);
-      });
-    }
+  this.submitted = true;
+  this.form.markAllAsTouched();
+  if (this.form.invalid) {
+    return;
   }
+  this.authService.register(this.form.value).subscribe({
+    next: () => this.router.navigate(['/login']),
+    error: (err) => {
+      this.errorMessage = err.error?.title;
+    }
+  });
+}
 }

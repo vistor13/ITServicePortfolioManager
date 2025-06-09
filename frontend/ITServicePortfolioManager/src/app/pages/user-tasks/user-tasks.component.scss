@@ -6,7 +6,10 @@
   position: absolute;
   left:100px;
 }
-
+.list-tasks{
+  display: flex;
+  flex-direction: column;
+}
 .content-layout {
   display: flex;
   flex-direction: row;
@@ -15,4 +18,42 @@
   position: absolute;
   left: 75px;
   margin-top: 50px;
+}
+.error-message-centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: red;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 20px;
+  border: 2px solid red;
+  border-radius: 8px;
+  background-color: #ffe6e6;
+  max-width: 80%;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+  z-index: 9999;
+}
+.title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+}
+.header{
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+.top-list{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5px;
+}
+.filter{
+  display: flex;
+  justify-content: left;
 }

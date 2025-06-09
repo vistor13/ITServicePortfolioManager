@@ -9,6 +9,9 @@
       <input
         formControlName="userName"
         class="tt-input"  type="text" placeholder="Вкажіть ваш логін">
+      <div *ngIf="form.get('userName')?.hasError('required') && form.get('userName')?.touched && submitted" class="error">
+        Поле логіну є обов’язковим
+      </div>
     </div>
 
     <div class="tt-control">
@@ -16,6 +19,9 @@
       <input
         formControlName="password"
         class="tt-input"  type="password" placeholder="Вкажіть ваш пароль">
+      <div *ngIf="form.get('password')?.hasError('required') && form.get('password')?.touched && submitted" class="error">
+        Поле паролю є обов’язковим
+      </div>
     </div>
 
     <div class="tt-control">
@@ -25,18 +31,23 @@
         class="tt-input"
         type="password"
         placeholder="Підтвердіть ваш пароль">
-    </div>
 
-    <div *ngIf="form.get('confirmPassword')?.hasError('passwordMismatch') && form.get('confirmPassword')?.touched" class="error">
-      Паролі не збігаються
+      <div *ngIf="form.get('confirmPassword')?.hasError('required') && form.get('confirmPassword')?.touched && submitted" class="error">
+        Поле підтвердження пароля є обов’язковим
+      </div>
+
+      <div *ngIf="form.hasError('passwordMismatch') &&form.get('password')?.valid &&form.get('confirmPassword')?.valid &&form.get('confirmPassword')?.touched" class="error">
+        Паролі не співпадають
     </div>
 
     <button class="btn-list" type="submit">Зареєструватися</button>
-
+    <div *ngIf="errorMessage" class="error">
+      {{ errorMessage }}
+    </div>
     <p class="auth-text">
        Маєте обліковий запис?
       <a [routerLink]="['/login']" class="enter-link">Log In</a>
     </p>
-
+    </div>
   </form>
 </div>

@@ -9,6 +9,9 @@
         <input
           formControlName="userName"
           class="tt-input"  type="text" placeholder="Вкажіть ваш логін">
+        <div *ngIf="form.get('userName')?.hasError('required') && form.get('userName')?.touched && submitted" class="error">
+          Поле логіну є обов’язковим
+        </div>
       </div>
 
       <div class="tt-control">
@@ -16,8 +19,13 @@
         <input
           formControlName="password"
           class="tt-input" type="password"  placeholder="Вкажіть ваш пароль">
+        <div *ngIf="form.get('password')?.hasError('required') && form.get('password')?.touched && submitted" class="error">
+          Поле паролю є обов’язковим
+        </div>
       </div>
-
+      <div *ngIf="errorMessage" class="error">
+        {{ errorMessage }}
+      </div>
       <button class="btn-list" type="submit">Увійти</button>
 
       <p class="auth-text">

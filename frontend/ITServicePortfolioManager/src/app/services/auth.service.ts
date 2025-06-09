@@ -13,7 +13,7 @@ export class AuthService {
   token: string | null = null;
   private apiUrl = 'http://localhost:5037/api/auth';
 
-  get isAuth(){
+   isAuth(){
     if (this.token == null){
       this.token = this.cookieService.get('token');
     }
@@ -25,9 +25,6 @@ export class AuthService {
     this.token = null;
   }
 
-  isLoggedIn(): boolean {
-    return !!this.cookieService.get('token');
-  }
 
   register(payload: { userName: string, password: string}) {
     return this.http.post(`${this.apiUrl}/register`, {
@@ -35,8 +32,7 @@ export class AuthService {
       password: payload.password,
     }).pipe(
       catchError(error => {
-        console.error('Registration error:', error);
-        return throwError(error);
+        return throwError(() => error);
       })
     );
   }
@@ -50,8 +46,12 @@ export class AuthService {
       tap(res => {
         this.token = res;
         this.cookieService.set('token', res);
+      }),
+      catchError(error => {
+        return throwError(() => error);
       })
     );
   }
+
 
 }

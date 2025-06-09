@@ -22,6 +22,11 @@ export class ServicePortfolioBuilderComponent {
 
   constructor(private router: Router,private taskStateService: TaskStateService,private  solverService: SolverService) {}
 
+  newFormating() {
+    if (this.resultComponent) {
+      this.resultComponent.reset();
+    }
+  }
   onBackClicked() {
     if (this.resultComponent) {
       this.resultComponent.reset();

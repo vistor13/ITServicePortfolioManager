@@ -77,9 +77,8 @@
       <div class="effective-value">
         <div class="strategy-block">
           <h3 class="strategy-title">Найбільш вживаніші групи сервісів</h3>
-
           <div class="discount-summary" [ngClass]="{'center-content': !resultWithDiscountMorePopularDeltaResponse}">
-            <div *ngIf="resultWithDiscountMorePopularDeltaResponse as r; else noDiscount">
+            <div *ngIf="resultWithDiscountMorePopularDeltaResponse as r;">
               <div class="result-discount">
                 <div class="result">
                   <h3>Ефективна знижка</h3>
@@ -98,14 +97,14 @@
               <app-income-package-display [data]="r" customClass="solution-discount"></app-income-package-display>
             </div>
           </div>
-          <ng-template #noDiscount>
-            <p class="no-discount-text">Ефективна знижка не виявлена.</p>
-          </ng-template>
+          <p *ngIf="!resultWithDiscountMorePopularDeltaResponse" class="no-discount-text">
+            Для найбільш вживаніших груп сервісів ефективна знижка не виявлена.
+          </p>
         </div>
         <div class="strategy-block">
           <h3 class="strategy-title">Найменш дохідний провайдер</h3>
           <div class="discount-summary" [ngClass]="{'center-content': !resultWithDiscountLowIncomeDeltaResponse}">
-            <div *ngIf="resultWithDiscountLowIncomeDeltaResponse as r; else noDiscount">
+            <div *ngIf="resultWithDiscountLowIncomeDeltaResponse as r;">
               <div class="result-discount">
                 <div class="result">
                   <h3>Ефективна знижка</h3>
@@ -120,13 +119,11 @@
                 <app-income-package-display [data]="r" customClass="solution-discount"></app-income-package-display>
               </div>
             </div>
-
-            <ng-template #noDiscount>
-              <p class="no-discount-text">Ефективна знижка не виявлена.</p>
-            </ng-template>
           </div>
+          <p *ngIf="!resultWithDiscountLowIncomeDeltaResponse" class="no-discount-text">
+            Для найменш дохідного провайдера  ефективна знижка не виявлена.
+          </p>
         </div>
-
         </div>
 
 

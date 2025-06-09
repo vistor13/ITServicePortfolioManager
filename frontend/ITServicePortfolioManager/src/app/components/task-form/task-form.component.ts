@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, EventEmitter, inject, OnInit, Output} from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -44,6 +44,7 @@ export class TaskFormComponent implements OnInit {
   solveService: SolverService = inject(SolverService);
   taskStateService: TaskStateService = inject(TaskStateService);
   cookieService = inject(CookieService);
+  @Output() newFormating = new EventEmitter<number>();
 
   constructor(private fb: FormBuilder) {}
 
@@ -85,7 +86,6 @@ export class TaskFormComponent implements OnInit {
 
   openAddGroup() {
     this.submitted = true;
-
     if (this.countProviderControl.invalid || !this.countProviderControl.value) {
       return;
     }
@@ -147,6 +147,7 @@ export class TaskFormComponent implements OnInit {
     if (!this.canCreatePortfolio()) {
       return;
     }
+    this.newFormating.emit();
     this.cookieService.delete("resultGreedyId");
     this.cookieService.delete("resultGeneticId");
     this.taskStateService.setFormingStarted(true);

@@ -44,7 +44,6 @@ export class ResultComponent implements OnInit {
   constructor(private taskStateService: TaskStateService) {}
 
   ngOnInit(): void {
-
     this.taskStateService.formingStarted$.subscribe(started => {
       this.isFormingStarted = started;
     });
@@ -70,7 +69,7 @@ export class ResultComponent implements OnInit {
     this.showChart = false;
     this.loading = true;
     this.isFormingStarted = false;
-    this.resultWithDiscountLowIncomeDeltaResponse=null;
+    this.resultWithDiscountLowIncomeDeltaResponse = null;
     this.resultWithDiscountMorePopularDeltaResponse = null;
   }
 
@@ -82,7 +81,7 @@ export class ResultComponent implements OnInit {
       case 'mostPopularDetailed':
         return 'Детальний огляд знижок на найбільш вживаніші груп сервісів';
       case 'lowIncomeGeneral':
-        return 'Знижки для провайдера з найнижчим доходом (загальний огляд)';
+        return 'Знижки для провайдера з найнижчим доходом';
       case 'lowIncomeDetailed':
         return 'Детальний огляд знижок для провайдера з найнижчим доходом';
       default:
@@ -100,7 +99,6 @@ export class ResultComponent implements OnInit {
         await this.applyDiscountsToPopularServices(this.task, this.selectedAlgorithm!);
         await this.applyDiscountsToLowIncomeProvider(this.task, this.selectedAlgorithm!);
       } catch (error) {
-        console.error('Помилка при застосуванні знижок:', error);
       } finally {
         this.loading = false;
       }

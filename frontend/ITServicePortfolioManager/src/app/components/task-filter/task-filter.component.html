@@ -1,0 +1,42 @@
+<div class="filter-toggle">
+  <button class="filter-button" (click)="toggleFilter()" title="Фільтр">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 4a1 1 0 011-1h16a1 1 0 01.8 1.6L15 12.3V20a1 1 0 01-1.45.9l-4-2A1 1 0 019 18v-5.7L3.2 5.6A1 1 0 013 4z"/>
+    </svg>
+  </button>
+</div>
+
+<div class="modal-backdrop" *ngIf="isOpen" (click)="toggleFilter()"></div>
+
+<div class="filter-modal" *ngIf="isOpen">
+  <div class="filter-modal-content">
+    <h2>Фільтрація задач</h2>
+
+    <div class="form-group">
+      <input type="date" [(ngModel)]="fromDate" placeholder="Від дати">
+    </div>
+
+    <div class="form-group">
+      <input type="date" [(ngModel)]="toDate" placeholder="До дати">
+    </div>
+
+    <div class="form-group">
+      <select [(ngModel)]="algorithmName">
+        <option value="">Не вибрано</option>
+        <option value="greedy">Greedy</option>
+        <option value="genetic">Genetic</option>
+      </select>
+    </div>
+
+    <label class="checkbox-label">
+      <input type="checkbox" [(ngModel)]="sortDescending">
+      Показати спочатку найновіші
+    </label>
+
+
+    <div class="filter-actions">
+      <button class="apply-button" (click)="applyFilter()">Застосувати</button>
+      <button class="cancel-button" (click)="toggleFilter()">Скасувати</button>
+    </div>
+  </div>
+</div>

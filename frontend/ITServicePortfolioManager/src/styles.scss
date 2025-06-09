@@ -23,15 +23,6 @@
   --btn-font-color: var(--blue-light);
 }
 
-[data-theme="dark"] {
-  --background:linear-gradient(180deg, var(--first-gradient) 0%, var(--second-gradient) 100%);
-  --text-color: var(--white);
-  --accent: var(--purper);
-  --first-gradient: #0f2027;
-  --second-gradient: var(--deep-navy-blue);
-  --btn-border-color: var(--white);
-  --btn-font-color: var(--blue-light);
-}
 html {
   margin: 0;
   padding: 0;

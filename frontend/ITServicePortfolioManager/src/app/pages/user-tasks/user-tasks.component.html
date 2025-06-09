@@ -1,9 +1,27 @@
 <div class="page-container">
   <app-back-button (backClick)="onBackClicked()" class="back-button-position"></app-back-button>
 
-  <div class="content-layout">
-    <app-list-tasks></app-list-tasks>
+  <div *ngIf="errorMessage" class="error-message-centered">
+    {{ errorMessage }}
+  </div>
+  <div class="content-layout" *ngIf="!errorMessage">
+   <div class="list-tasks">
+     <div class="top-list">
+       <div class="header">
+         <h1 class="title">Список задач</h1>
+         <app-task-filter (filterChanged)="onFilterChanged($event)"></app-task-filter>
+       </div>
+       <div class="filter">
+         <app-filter
+           [savedFilter]="currentFilter"
+           (filterChanged)="onFilterChanged($event)">
+         </app-filter>
+       </div>
+
+     </div>
+     <app-list-tasks [filtered]="currentFilter" (taskSelected)="onTaskSelected()"> (errorOccurred)="onErrorOccurred($event)"></app-list-tasks>
+   </div>
+
     <app-result #resultComponent></app-result>
   </div>
-
 </div>

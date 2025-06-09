@@ -1,5 +1,4 @@
 import {Component, inject} from '@angular/core';
-import {ThemeComponent} from '../theme/theme.component';
 import {RouterLink} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {NgIf} from '@angular/common';
@@ -9,7 +8,6 @@ import {SolverService} from '../../services/solver.service';
   selector: 'app-header',
   standalone:true,
   imports: [
-    ThemeComponent,
     RouterLink,
     NgIf
   ],
@@ -25,6 +23,6 @@ export class HeaderComponent {
     window.location.reload();
   }
   isAuthenticated(): boolean {
-    return this.authService.isLoggedIn();
+    return this.authService.isAuth();
   }
 }

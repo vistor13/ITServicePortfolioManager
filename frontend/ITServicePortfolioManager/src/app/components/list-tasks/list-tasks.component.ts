@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import {Component, EventEmitter, inject, Output, Input, OnChanges, SimpleChanges }from '@angular/core';
 import { SolverService } from '../../services/solver.service';
 import { TaskResponse } from '../../interfaces/task-response.model';
 import { NgForOf, NgIf } from '@angular/common';
-import {TaskStateService} from '../../services/task-state.service';
-import {TaskRequest} from '../../interfaces/task-request.model';
-import {CookieService} from 'ngx-cookie-service';
+import { TaskStateService } from '../../services/task-state.service';
+import { TaskRequest } from '../../interfaces/task-request.model';
+import { CookieService } from 'ngx-cookie-service';
+import { TaskService } from '../../services/task.service';
+import { TaskFilteredRequest } from '../../interfaces/filtered-tasks-request';
 
 @Component({
   selector: 'app-list-tasks',
@@ -13,46 +15,68 @@ import {CookieService} from 'ngx-cookie-service';
   templateUrl: './list-tasks.component.html',
   styleUrl: './list-tasks.component.scss'
 })
-export class ListTasksComponent {
+export class ListTasksComponent implements OnChanges {
   tasks: TaskResponse[] = [];
   selectedTask: TaskResponse | null = null;
+
   private cookieService = inject(CookieService);
   solveService = inject(SolverService);
+  taskService = inject(TaskService);
+
+  @Output() errorOccurred = new EventEmitter<string | null>();
+  @Output() taskSelected = new EventEmitter<number>();
+  @Input() filtered: TaskFilteredRequest | null = null;
+
   constructor(private taskStateService: TaskStateService) {}
 
   ngOnInit(): void {
-    this.getTasksByUserId();
+    this.getTasks();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['filtered']) {
+      this.getTasks();
+    }
+  }
+
+  getTasks(): void {
+    if (this.filtered) {
+      this.taskService.getFilteredTasksByUserId(this.filtered).subscribe({
+        next: (res) => this.tasks = res,
+        error: (err) => this.errorOccurred.emit(err.error?.title)
+      });
+    } else {
+      this.taskService.getTasksByUserId().subscribe({
+        next: (res) => this.tasks = res,
+        error: (err) => this.errorOccurred.emit(err.error?.title)
+      });
+    }
   }
 
   getById(taskId: number): void {
     const task = this.tasks.find(t => t.id === Number(taskId));
-    if (!task) {
-      console.error('Задача з таким ID не знайдена');
-      return;
-    }
+    if (!task) return;
+
+    this.taskSelected.emit();
     this.solveService.getSolutionByTaskId(taskId).subscribe({
       next: (res) => {
         this.taskStateService.setResult(res);
-        this.taskStateService.setSelectedTask(task)
-        this.taskStateService.setTask(this.mapTaskResponseToRequest(task))
+        this.taskStateService.setSelectedTask(task);
+        this.taskStateService.setTask(this.mapTaskResponseToRequest(task));
         this.taskStateService.setSelectedTypeAlgorithm(task.algorithm);
-        if (task && task.id != null) {
-          if (task.algorithm === 'greedy') {
-            this.cookieService.set("resultGreedyId", res.id.toString());
-          } else if (task.algorithm === 'genetic') {
-            this.cookieService.set("resultGeneticId", res.id.toString());
+
+        if (task.id != null) {
+          const cookieName = task.algorithm === 'greedy'
+            ? "resultGreedyId"
+            : task.algorithm === 'genetic'
+              ? "resultGeneticId"
+              : null;
+
+          if (cookieName) {
+            this.cookieService.set(cookieName, res.id.toString());
           }
         }
       }
-    });
-
-  }
-
-
-
-  getTasksByUserId(): void {
-    this.solveService.getSolvesByUserId().subscribe(res => {
-      this.tasks = res;
     });
   }
 
@@ -79,5 +103,4 @@ export class ListTasksComponent {
       }))
     };
   }
-
 }
