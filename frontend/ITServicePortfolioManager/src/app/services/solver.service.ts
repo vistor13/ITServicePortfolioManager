@@ -14,10 +14,10 @@ export class SolverService {
 
   private http = inject(HttpClient);
   private cookieService = inject(CookieService);
-  private apiUrl = 'http://localhost:5037/api/portfolio';
+  private apiUrl = 'http://localhost:5037/api/service-packages';
 
   createServicePortfolio(request: TaskRequest, typeAlgorithm: string): Observable<ResultResponse> {
-    return this.http.post<ResultResponse>(`${this.apiUrl}/solve`, request, {
+    return this.http.post<ResultResponse>(`${this.apiUrl}/create`, request, {
       params: { typeAlgorithm }
     }).pipe(
       tap(res => {
@@ -47,13 +47,13 @@ export class SolverService {
   }
 
   getSolutionById(idSolve: number): Observable<ResultResponse> {
-    return this.http.get<ResultResponse>(`${this.apiUrl}/solutions`, {
+    return this.http.get<ResultResponse>(`${this.apiUrl}`, {
       params: { idSolve: idSolve.toString() }
     });
   }
 
   getSolutionByTaskId(taskId: number): Observable<ResultResponse> {
-    return this.http.get<ResultResponse>(`${this.apiUrl}/solutions/by-task`, {
+    return this.http.get<ResultResponse>(`${this.apiUrl}/by-task`, {
       params: { taskId: taskId.toString() }
     });
   }
@@ -63,7 +63,7 @@ export class SolverService {
     id: number
   ): Observable<DiscountDeltaPopularServicesResponse> {
     return this.http.post<DiscountDeltaPopularServicesResponse>(
-      `${this.apiUrl}/apply-discounts/popular`,
+      `${this.apiUrl}/discounts/apply/popular`,
       request,
       {
         params: {
@@ -80,7 +80,7 @@ export class SolverService {
     id: number
   ): Observable<DiscountDeltaLowIncomeResponse> {
     return this.http.post<DiscountDeltaLowIncomeResponse>(
-      `${this.apiUrl}/apply-discounts/low-income`,
+      `${this.apiUrl}/discounts/apply/low-income`,
       request,
       {
         params: {

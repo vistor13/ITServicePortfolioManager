@@ -8,18 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ITServicePortfolioManager.Api.Endpoints;
 
-public static class SolverEndpoint
+public static class ServicePackagesEndpoint
 {
-    public static void MapSolverEndpoint(this IEndpointRouteBuilder app)
+    public static void MapServicePackagesEndpoint(this IEndpointRouteBuilder app)
     {
-        var endPoints = app.MapGroup("api/portfolio/").WithTags("Solver");
-        endPoints.MapPost("solve", ServicePortfolioSolver).RequireAuthorization();
-        endPoints.MapGet("solutions", GetSolveByIdAsync).RequireAuthorization();
-        endPoints.MapGet("solutions/by-task", GetSolveByTaskIdAsync).RequireAuthorization();
-        endPoints.MapPost("apply-discounts/popular", ApplyDiscountsToPopularServices).RequireAuthorization();
-        endPoints.MapPost("apply-discounts/low-income", ApplyDiscountsToLowIncomeProvider).RequireAuthorization();
+        var endPoints = app.MapGroup("api/service-packages/").WithTags("ServicePackages");
 
+        endPoints.MapPost("create", ServicePortfolioSolver).RequireAuthorization();
+        endPoints.MapGet("", GetSolveByIdAsync).RequireAuthorization();
+        endPoints.MapGet("by-task", GetSolveByTaskIdAsync).RequireAuthorization();
+        endPoints.MapPost("discounts/apply/popular", ApplyDiscountsToPopularServices).RequireAuthorization();
+        endPoints.MapPost("discounts/apply/low-income", ApplyDiscountsToLowIncomeProvider).RequireAuthorization();
     }
+
     
     private static async Task<IResult> ServicePortfolioSolver
     (

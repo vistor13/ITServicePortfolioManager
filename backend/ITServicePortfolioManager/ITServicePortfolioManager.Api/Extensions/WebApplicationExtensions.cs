@@ -43,7 +43,7 @@ namespace ITServicePortfolioManager.Api.Extensions
 			app.UseRouting();
 			app.UseAuthentication();
 			app.UseAuthorization();
-			app.MapSolverEndpoint();
+			app.MapServicePackagesEndpoint();
 			app.MapTaskEndpoint();
 			app.MapAuthEndpoint();
 			app.UseCors("AllowAngular");

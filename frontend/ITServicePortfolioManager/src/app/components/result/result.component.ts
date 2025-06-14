@@ -77,9 +77,9 @@ export class ResultComponent implements OnInit {
   getNameChart(chartType: 'mostPopularGeneral' | 'mostPopularDetailed' | 'lowIncomeGeneral' | 'lowIncomeDetailed'): string {
     switch (chartType) {
       case 'mostPopularGeneral':
-        return 'Знижки на найбільш вживаніші групи сервісів';
+        return 'Знижки на найбільш уживані групи сервісів';
       case 'mostPopularDetailed':
-        return 'Детальний огляд знижок на найбільш вживаніші груп сервісів';
+        return 'Детальний огляд знижок на найбільш уживані групи сервісів';
       case 'lowIncomeGeneral':
         return 'Знижки для провайдера з найнижчим доходом';
       case 'lowIncomeDetailed':
